@@ -182,7 +182,6 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
 .rc.passage-block .rc-ref{color:var(--gold)}
 sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;vertical-align:super;line-height:0}
 
-
 /* ── KJV DICTIONARY ── */
 .dict-entry{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:6px}
 .dict-word{font-family:'IM Fell English',serif;font-size:17px;color:var(--gold);margin-bottom:4px}
@@ -720,10 +719,47 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 /* ── MEM OVERLAY ── */
 #mem-overlay{position:fixed;inset:0;background:var(--bg);z-index:520;display:none;flex-direction:column}
 #mem-overlay.on{display:flex}
-#mem-game{flex:1;display:none;flex-direction:column;overflow:hidden;position:relative}
-#mem-congrats{display:none;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;text-align:center;flex-shrink:0}
+#mem-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+  background:linear-gradient(to bottom,var(--bg2),var(--bg))}
+#mem-back{background:var(--surface);border:1px solid var(--border);color:var(--text-d);
+  border-radius:8px;padding:5px 12px;font-size:13px;font-weight:600;
+  cursor:pointer;display:none;font-family:'Inter',sans-serif;flex-shrink:0}
+#mem-back:active{opacity:.7}
+#mem-hdr-center{flex:1;text-align:center}
+#mem-hdr-title{font-family:'IM Fell English',serif;font-size:18px;color:var(--gold);line-height:1.2;display:block}
+#mem-hdr-sub{font-family:'Inter',sans-serif;font-size:8.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-m);display:block;margin-top:1px}
+#mem-close-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-m);
+  border-radius:8px;padding:5px 11px;font-size:13px;cursor:pointer;
+  flex-shrink:0;font-family:'Inter',sans-serif}
+#mem-close-btn:active{opacity:.7}
+#mem-select{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
 /* Inline input */
+/* ── Scourby Audio Player ── */
+#scourby-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;
+  color:var(--text-m);font-size:20px;line-height:1;transition:color .2s;display:none}
+#scourby-btn.active{color:var(--gold)}
+#scourby-bar{display:none;position:fixed;bottom:60px;left:0;right:0;z-index:200;
+  background:var(--bg2);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:8px 12px;align-items:center;gap:8px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.18)}
+#scourby-bar.on{display:flex}
+.scourby-open #reader-body{padding-bottom:120px}
+.scourby-open #screen-books .screen-content{padding-bottom:120px}
+.sb-label{flex:1;font-family:'Crimson Pro',serif;font-size:13px;color:var(--text-m);
+  font-style:italic;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-d);
+  border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer;flex-shrink:0;
+  touch-action:manipulation}
+.sb-btn:active{opacity:.7}
+#sb-progress{height:3px;background:var(--border);border-radius:2px;
+  margin:0 0 0 0;position:relative;cursor:pointer}
+#sb-progress-fill{height:100%;background:var(--gold);border-radius:2px;
+  transition:width .5s linear;pointer-events:none}
+
 .mem-inline-input{
   display:inline-block;background:rgba(201,148,58,.12);
   border:none;border-bottom:2px solid var(--gold);
@@ -737,7 +773,140 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 .mem-inline-input.correct{background:rgba(76,175,80,.25);border-color:#4CAF50;animation:mem-flash-ok .35s ease}
 .mem-inline-input.wrong{background:rgba(220,60,60,.25);border-color:#dc3c3c;animation:mem-flash-bad .35s ease}
 
-/* Peek (reveal) mode */
+.mem-verse-btn.mastered .mem-verse-ref{color:var(--gold)}
+.mc-ico{font-size:36px}
+.mc-title{font-family:'IM Fell English',serif;font-size:22px;color:var(--text)}
+.mc-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-d);border-radius:8px;padding:9px 18px;font-size:14px;cursor:pointer;transition:all .15s}
+.mc-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:600}
+.mc-btns{display:flex;gap:10px;justify-content:center;margin-top:4px}
+@keyframes mem-flash-ok{0%{background:rgba(76,175,80,.5)}100%{background:rgba(76,175,80,.25)}}
+@keyframes mem-flash-bad{0%,50%{background:rgba(220,60,60,.35)}100%{background:rgba(220,60,60,.25)}}
+
+/* ── MEM MASTERY / SELECT ── */
+#mem-select{overflow-y:auto;flex:1}
+#mem-stats-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 4px;font-size:12px;color:var(--text-m)}
+#mem-stats-bar .msb-count{font-weight:700;color:var(--gold)}
+#mem-streak-chip{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:12px;color:var(--text-d)}
+#mem-streak-chip .msc-num{font-weight:700;color:var(--gold)}
+.mem-verse-btn{position:relative}
+.mem-status-dot{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:13px;line-height:1}
+.mem-verse-btn.practiced .mem-verse-preview{color:var(--text-m)}
+.mem-verse-btn.mastered .mem-verse-ref{color:var(--gold)}
+
+/* ── BADGES PANEL ── */
+#mem-badges{padding:0 14px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.mem-badge-hdr{padding:12px 14px 6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-m)}
+.mbadge{display:flex;flex-direction:column;align-items:center;gap:3px;width:64px;cursor:default}
+
+.mbadge.prestige .mbadge-ico.earned{filter:drop-shadow(0 0 4px gold)}
+.mem-pack-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 4px 6px;font-family:'IM Fell English',serif;font-size:14px;
+  color:var(--gold);border-bottom:1px solid var(--border);margin-bottom:8px}
+.mem-pack-locked{background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:20px;text-align:center;margin-bottom:8px}
+.mbadge-ico{font-size:26px;filter:grayscale(1) opacity(.35);transition:filter .3s}
+.mbadge-ico.earned{filter:none}
+.mbadge-lbl{font-size:9px;color:var(--text-m);text-align:center;line-height:1.2}
+.mbadge-lbl.earned{color:var(--gold)}
+
+/* ── CONGRATS SCREEN ── */
+.mc-verse-echo{font-family:'Crimson Pro',serif;font-size:17px;line-height:1.65;color:var(--text);padding:12px 16px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;text-align:left;max-width:100%;margin:0 4px}
+.mc-meta{display:flex;gap:12px;font-size:12px;color:var(--text-m);align-items:center}
+.mc-meta span{display:flex;align-items:center;gap:4px}
+.mc-mastered-badge{background:rgba(201,148,58,.15);border:1px solid var(--gold-d);color:var(--gold);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;display:none}
+.mc-mastered-badge.show{display:inline-block}
+
+/* ── CONFETTI CANVAS ── */
+#mem-confetti{position:absolute;inset:0;pointer-events:none;z-index:10}
+
+/* ── IN-GAME STREAK BAR ── */
+#mem-game-streak{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-m);padding:0 14px 6px}
+#mem-game-streak .mgs-fire{font-size:14px}
+#mem-game-streak .mgs-num{font-weight:700;color:var(--gold)}
+
+/* ── SIMPLE TOAST ── */
+#mem-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:20px;padding:8px 18px;font-size:13px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:600;white-space:nowrap}
+#mem-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── BADGE UNLOCK TOAST ── */
+#mem-badge-toast{position:fixed;top:-120px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--gold-d);border-radius:12px;padding:10px 18px;text-align:center;z-index:600;transition:top .35s;box-shadow:0 4px 20px rgba(0,0,0,.4);pointer-events:none}
+#mem-badge-toast.show{top:80px;pointer-events:auto}
+#mem-badge-toast .mbt-ico{font-size:28px}
+#mem-badge-toast .mbt-lbl{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#mem-badge-toast .mbt-name{font-size:14px;color:var(--text);margin-top:1px}
+
+/* Inline input */
+.mem-cat{margin-bottom:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.mem-cat-hdr{font-family:'IM Fell English',serif;font-size:16px;color:var(--gold);margin-bottom:0;padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;min-height:48px;-webkit-tap-highlight-color:rgba(201,148,58,.15)}
+.mem-cat-hdr:active{background:var(--surface);opacity:.8}
+.mem-cat-chevron{font-size:16px;color:var(--text-m);transition:transform .2s;display:inline-block;min-width:24px;text-align:center;line-height:1}
+.mem-cat.open .mem-cat-chevron{transform:rotate(90deg)}
+.mem-cat-body{display:none}
+.mem-cat.open .mem-cat-body{display:block}
+.mem-verse-btn{display:flex;align-items:center;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;text-align:left;gap:8px;transition:border-color .15s}
+.mem-verse-btn:hover{border-color:var(--gold-d)}
+.mem-verse-ref{font-family:'Crimson Pro',serif;font-size:16px;color:var(--text);font-weight:600;flex:1}
+.mem-verse-preview{font-size:12px;color:var(--text-m)}
+.mem-verse-btn.mastered .mem-verse-ref{color:var(--gold)}
+.mc-ico{font-size:36px}
+.mc-title{font-family:'IM Fell English',serif;font-size:22px;color:var(--text)}
+.mc-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-d);border-radius:8px;padding:9px 18px;font-size:14px;cursor:pointer;transition:all .15s}
+.mc-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:600}
+.mc-btns{display:flex;gap:10px;justify-content:center;margin-top:4px}
+@keyframes mem-flash-ok{0%{background:rgba(76,175,80,.5)}100%{background:rgba(76,175,80,.25)}}
+@keyframes mem-flash-bad{0%,50%{background:rgba(220,60,60,.35)}100%{background:rgba(220,60,60,.25)}}
+#mem-game{display:none;flex-direction:column;overflow:hidden;position:relative}
+#mem-congrats{display:none;flex-direction:column;align-items:center;gap:10px;padding:24px 16px;text-align:center;flex-shrink:0}
+
+/* ── MEM MASTERY / SELECT ── */
+
+#mem-stats-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 4px;font-size:12px;color:var(--text-m)}
+#mem-stats-bar .msb-count{font-weight:700;color:var(--gold)}
+#mem-streak-chip{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:12px;color:var(--text-d)}
+#mem-streak-chip .msc-num{font-weight:700;color:var(--gold)}
+.mem-verse-btn{position:relative}
+.mem-status-dot{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:13px;line-height:1}
+.mem-verse-btn.practiced .mem-verse-preview{color:var(--text-m)}
+.mem-verse-btn.mastered .mem-verse-ref{color:var(--gold)}
+
+/* ── BADGES PANEL ── */
+#mem-badges{padding:0 14px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.mem-badge-hdr{padding:12px 14px 6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-m)}
+.mbadge{display:flex;flex-direction:column;align-items:center;gap:3px;width:64px;cursor:default}
+.mbadge-ico{font-size:26px;filter:grayscale(1) opacity(.35);transition:filter .3s}
+.mbadge-ico.earned{filter:none}
+.mbadge-lbl{font-size:9px;color:var(--text-m);text-align:center;line-height:1.2}
+.mbadge-lbl.earned{color:var(--gold)}
+
+/* ── CONGRATS SCREEN ── */
+#mem-congrats{gap:12px}
+.mc-verse-echo{font-family:'Crimson Pro',serif;font-size:17px;line-height:1.65;color:var(--text);padding:12px 16px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;text-align:left;max-width:100%;margin:0 4px}
+.mc-meta{display:flex;gap:12px;font-size:12px;color:var(--text-m);align-items:center}
+.mc-meta span{display:flex;align-items:center;gap:4px}
+.mc-mastered-badge{background:rgba(201,148,58,.15);border:1px solid var(--gold-d);color:var(--gold);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;display:none}
+.mc-mastered-badge.show{display:inline-block}
+
+/* ── CONFETTI CANVAS ── */
+#mem-confetti{position:absolute;inset:0;pointer-events:none;z-index:10}
+
+/* ── IN-GAME STREAK BAR ── */
+#mem-game-streak{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-m);padding:0 14px 6px}
+#mem-game-streak .mgs-fire{font-size:14px}
+#mem-game-streak .mgs-num{font-weight:700;color:var(--gold)}
+
+/* ── SIMPLE TOAST ── */
+#mem-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:20px;padding:8px 18px;font-size:13px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:600;white-space:nowrap}
+#mem-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── BADGE UNLOCK TOAST ── */
+#mem-badge-toast{position:fixed;top:-120px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--gold-d);border-radius:12px;padding:10px 18px;text-align:center;z-index:600;transition:top .35s;box-shadow:0 4px 20px rgba(0,0,0,.4);pointer-events:none}
+#mem-badge-toast.show{top:80px;pointer-events:auto}
+#mem-badge-toast .mbt-ico{font-size:28px}
+#mem-badge-toast .mbt-lbl{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+#mem-badge-toast .mbt-name{font-size:14px;color:var(--text);margin-top:1px}
+
+/* Inline input */
+
 .mem-peek{color:var(--text-m);font-style:italic;border-bottom:1px dotted var(--text-m);cursor:pointer}
 
 /* Reveal button */
@@ -757,6 +926,86 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 #vpop-dict-row .vd-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-m);margin-bottom:5px}
 .vd-word{display:inline-block;color:var(--gold);font-family:'Crimson Pro',serif;font-size:14px;font-weight:600;cursor:pointer;margin-right:8px;padding:1px 0;border-bottom:1px dotted var(--gold-d)}
 .vd-word:active{opacity:.7}
+
+/* ── VERSE CLIPBOARD ── */
+#clip-badge{display:none;align-items:center;gap:3px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;padding:3px 8px;
+  font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;transition:all .15s}
+#clip-badge.on{display:flex}
+#clip-badge-n{font-size:13px}
+
+#clip-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:490;
+  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+#clip-overlay.on{display:flex}
+#clip-inner{background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px 18px 0 0;width:100%;max-width:700px;
+  max-height:80vh;display:flex;flex-direction:column;animation:su .22s ease;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+#clip-hdr{display:flex;align-items:center;padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);flex-shrink:0}
+#clip-hdr-title{font-family:'IM Fell English',serif;font-size:17px;color:var(--gold);flex:1}
+#clip-body{overflow-y:auto;padding:10px 14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.clip-item{display:flex;align-items:center;gap:8px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:9px 12px}
+.clip-item-ref{font-family:'IM Fell English',serif;font-size:14px;color:var(--gold);flex:1}
+.clip-item-preview{font-family:'Crimson Pro',serif;font-size:11px;color:var(--text-m);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.clip-ord{display:flex;flex-direction:column;gap:2px}
+.clip-ord button{background:none;border:1px solid var(--border);color:var(--text-m);
+  border-radius:4px;width:22px;height:18px;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;transition:all .15s}
+.clip-ord button:active{background:var(--bg3);color:var(--gold)}
+.clip-rm{background:none;border:none;color:var(--text-m);font-size:16px;
+  cursor:pointer;padding:2px 4px;line-height:1}
+#clip-add-hint{font-family:'Crimson Pro',serif;font-size:13px;color:var(--text-m);
+  text-align:center;padding:20px;font-style:italic}
+#clip-foot{padding:10px 14px 14px;display:flex;gap:8px;flex-shrink:0;
+  border-top:1px solid var(--border)}
+#clip-gen-btn{flex:1;background:var(--gold);color:var(--bg);border:none;
+  border-radius:8px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
+#clip-gen-btn:disabled{opacity:.4;cursor:default}
+#clip-clear-btn{background:var(--surface);border:1px solid var(--border);
+  color:var(--text-d);border-radius:8px;padding:11px 14px;font-size:13px;cursor:pointer}
+
+/* Combined card overlay reuses scr-overlay */
+
+/* ── Search testament filter ── */
+#s-filter{display:flex;gap:6px;padding:6px 0 2px}
+.sf-btn{flex:1;background:var(--surface);border:1px solid var(--border);
+  color:var(--text-d);border-radius:8px;padding:6px;font-size:12px;
+  font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.sf-btn.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+
+/* ── Search book strip ── */
+#s-book-strip{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-shrink:0}
+#s-book-strip::-webkit-scrollbar{display:none}
+.s-bchip{flex-shrink:0;background:var(--surface);border:1px solid var(--border);
+  color:var(--text-d);border-radius:12px;padding:4px 10px;font-size:12px;
+  cursor:pointer;white-space:nowrap;transition:all .15s;line-height:1.4}
+.s-bchip.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.s-bchip-n{font-size:10px;opacity:.7;margin-left:2px}
+
+/* ── Chapter picker ── */
+#ch-picker{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:310;
+  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px)}
+#ch-picker.on{display:flex}
+#ch-picker-inner{background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px 18px 0 0;width:100%;max-width:700px;
+  max-height:72vh;display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+#ch-picker-hdr{display:flex;align-items:center;padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);flex-shrink:0}
+#ch-picker-book{font-family:'IM Fell English',serif;font-size:18px;
+  color:var(--gold);flex:1;text-align:center}
+#ch-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;
+  padding:12px 14px 16px;overflow-y:auto}
+.ch-num-btn{background:var(--surface);border:1px solid var(--border);
+  color:var(--text-d);border-radius:7px;padding:10px 4px;text-align:center;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .12s}
+.ch-num-btn.cur{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.ch-num-btn:active{opacity:.6}
+#reader-loc{cursor:pointer}
 </style>
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   <script>
@@ -786,6 +1035,7 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
     All
   </button>
+  <div id="clip-badge" onclick="openClipboard()" title="Verse card clipboard"><span>📋</span><span id="clip-badge-n">0</span></div>
   <button id="btn-help" class="hbtn" onclick="showTips()" title="Tips & Help">?</button>
   <button id="share-btn" onclick="showSharePop()" title="Share this app">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -825,13 +1075,22 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
     <div style="padding:12px">
       <div class="ch-book-title" id="ch-book-title"></div>
       <div class="chs-grid" id="chs-grid"></div>
+      <div id="chs-audio-row" style="display:none;margin-top:16px">
+        <button onclick="scourbyToggleFromChapters()"
+          style="width:100%;background:var(--surface);border:1px solid var(--border);
+                 color:var(--gold);border-radius:10px;padding:12px 16px;font-size:15px;
+                 font-family:'IM Fell English',serif;cursor:pointer;display:flex;
+                 align-items:center;justify-content:center;gap:8px">
+          🔊 <span id="chs-scourby-label">Listen — Alexander Scourby KJV</span>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- READER -->
   <div class="screen" id="screen-reader">
     <div id="reader-topbar">
-      <div id="reader-loc" onclick="goToChapters()"></div>
+      <div id="reader-loc" onclick="openChPicker()" title="Jump to chapter"></div>
     </div>
     <div id="parallel-strip">
       <span class="par-lbl">⇄ Parallels</span>
@@ -880,6 +1139,12 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
           <svg class="s-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input type="search" id="s-input" placeholder="Verse ref, keywords, or phrase…" oninput="handleSearch(this.value)" autocomplete="off">
         </div>
+        <div id="s-filter">
+          <button class="sf-btn on" onclick="setSearchFilter('all')">All</button>
+          <button class="sf-btn" onclick="setSearchFilter('ot')">Old Testament</button>
+          <button class="sf-btn" onclick="setSearchFilter('nt')">New Testament</button>
+        </div>
+        <div id="s-book-strip" style="display:none"></div>
         <div id="s-results"><div id="s-status">Enter a word, phrase, or reference (e.g. Matthew 24:24)</div></div>
       </div>
 
@@ -901,7 +1166,6 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
       </div>
     </div>
   </div>
-
 
   <!-- READING PLANS -->
   <div class="screen" id="screen-plans">
@@ -1009,7 +1273,6 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
         <div class="tip-row"><span class="tip-ico">📚</span><span class="tip-txt"><strong>Reading Journey</strong> (bottom of Plans) — track and share which of the 66 books you've read</span></div>
       </div>
 
-
       <!-- Offline -->
       <div class="tips-section">
         <div class="tips-section-lbl">📶 Offline Reading</div>
@@ -1034,6 +1297,24 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 
       <!-- Warning -->
       <div class="tips-section">
+        <div class="tips-section-lbl">🔊 Audio Bible — Full KJV by Book</div>
+        <div class="tip-row"><span class="tip-ico">🔊</span><span class="tip-txt">The app includes a complete KJV audio Bible. Tap any book to see its chapter list — a <strong>🔊 Listen</strong> button appears below the chapters. Tap it to begin streaming the entire book read aloud.</span></div>
+        <div class="tip-row"><span class="tip-ico">▶</span><span class="tip-txt">A <strong>floating player bar</strong> appears at the bottom of the screen with play/pause, <strong>◀30</strong> (back 30 seconds), <strong>30▶</strong> (forward 30 seconds), speed control (0.5× to 2.0×), and a tappable progress bar to scrub anywhere in the book.</span></div>
+        <div class="tip-row"><span class="tip-ico">💾</span><span class="tip-txt"><strong>Your place is saved automatically</strong> for every book. If you close the app and return, the Listen button shows your resume time — tap it to pick up exactly where you left off. Each of the 66 books remembers its own position.</span></div>
+        <div class="tip-row"><span class="tip-ico">📖</span><span class="tip-txt">You can <strong>read along</strong> while the audio plays — navigate chapters freely, the player floats with you. Tap ⏸ to pause at any time and ▶ to resume. The player pauses automatically when you return to the home screen.</span></div>
+        <div class="tip-row"><span class="tip-ico">🍎</span><span class="tip-txt"><strong>iPhone / iPad:</strong> Audio streams over Wi-Fi or mobile data. For best experience on a long commute or trip, open the book first on Wi-Fi to begin buffering before switching to mobile data.</span></div>
+      </div>
+
+      <div class="tips-section">
+        <div class="tips-section-lbl">💾 Backup &amp; Restore Your Data</div>
+        <div class="tip-row"><span class="tip-ico">📤</span><span class="tip-txt">Moving to a new device or URL? Tap <strong>Export Data</strong> to copy all your streaks, badges, bookmarks, highlights and progress as a code. Then tap <strong>Import Data</strong> on your new device to restore everything.</span></div>
+        <div style="display:flex;gap:8px;margin:8px 0 4px">
+          <button onclick="exportAppData()" style="flex:1;background:var(--surface);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer">📤 Export Data</button>
+          <button onclick="importAppData()" style="flex:1;background:var(--surface);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer">📥 Import Data</button>
+        </div>
+      </div>
+
+      <div class="tips-section">
         <div class="tips-section-lbl">⚠️ Important</div>
         <div class="tip-row"><span class="tip-ico">⚠️</span><span class="tip-txt"><strong>Do not clear your browser cache</strong> for this site — doing so permanently deletes your bookmarks, highlights, notes, reading streak, and plan progress. Your data is stored on your device only</span></div>
       </div>
@@ -1045,9 +1326,12 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 <!-- VERSE MEMORY OVERLAY -->
 <div id="mem-overlay">
   <div id="mem-hdr">
-    <button id="mem-back" onclick="memBack()">← Back</button>
-    <div id="mem-hdr-title">✏️ Verse Memory</div>
-    <button id="mem-close-btn" onclick="closeMemorize()">✕</button>
+    <button id="mem-back" onclick="memBack()">&#8592; Back</button>
+    <div id="mem-hdr-center">
+      <span id="mem-hdr-title">⚔ Sword Drill</span>
+      <span id="mem-hdr-sub">Verse Memorization</span>
+    </div>
+    <button id="mem-close-btn" onclick="closeMemorize()">Close ✕</button>
   </div>
 
   <!-- Verse selection -->
@@ -1055,10 +1339,17 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 
   <!-- Game view -->
   <div id="mem-game">
+    <canvas id="mem-confetti"></canvas>
     <div id="mem-game-top">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
         <div id="mem-game-ref" style="flex:1"></div>
         <button id="mem-reveal-btn" onclick="toggleMemReveal()">👁 Show</button>
+      </div>
+      <div id="mem-game-streak">
+        <span class="mgs-fire">✏️</span>
+        <span>Memory streak:</span>
+        <span class="mgs-num" id="mgs-num">0</span>
+        <span id="mgs-days">days</span>
       </div>
       <div class="mem-mode-row">
         <button class="mem-mode-btn on" id="mmb-guided" onclick="setMemMode('guided')">🔤 Guided</button>
@@ -1070,9 +1361,15 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
     <div id="mem-verse-scroll">
       <div id="mem-verse-text"></div>
       <div id="mem-congrats">
-        <div class="mc-ico">🎉</div>
-        <div class="mc-title">Verse Complete!</div>
-        <div class="mc-sub">Well done — hide it in thine heart</div>
+        <div class="mc-ico" id="mc-ico">🎉</div>
+        <div class="mc-title" id="mc-title">Verse Complete!</div>
+        <div class="mc-mastered-badge" id="mc-mastered-badge">🏆 Mastered!</div>
+        <div class="mc-meta" id="mc-meta">
+          <span id="mc-time">⏱ —</span>
+          <span id="mc-mode-lbl">🔤 Guided</span>
+        </div>
+        <div class="mc-verse-echo" id="mc-verse-echo"></div>
+        <div class="mc-sub" id="mc-sub">Well done — hide it in thine heart</div>
         <div class="mc-btns">
           <button class="mc-btn" onclick="resetMem()">↩ Try Again</button>
           <button class="mc-btn primary" onclick="memBack()">Choose Another</button>
@@ -1080,6 +1377,51 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Badge unlock toast -->
+<div id="mem-badge-toast">
+  <div class="mbt-ico" id="mbt-ico"></div>
+  <div class="mbt-lbl">Badge Unlocked!</div>
+  <div class="mbt-name" id="mbt-name"></div>
+</div>
+
+<!-- Simple toast -->
+<div id="mem-toast"></div>
+
+<!-- CHAPTER PICKER -->
+<div id="ch-picker" onclick="if(event.target===this)closeChPicker()">
+  <div id="ch-picker-inner">
+    <div id="ch-picker-hdr">
+      <div id="ch-picker-book"></div>
+      <button style="background:none;border:none;color:var(--text-m);font-size:20px;cursor:pointer;padding:0 4px" onclick="closeChPicker()">✕</button>
+    </div>
+    <div id="ch-grid"></div>
+    <div id="cp-audio-row" style="display:none;padding:10px 14px 4px;border-top:1px solid var(--border);margin-top:6px">
+      <button id="cp-scourby-btn" onclick="scourbyToggleFromPicker()"
+        style="width:100%;background:var(--surface);border:1px solid var(--border);
+               color:var(--gold);border-radius:10px;padding:11px 16px;font-size:15px;
+               font-family:'IM Fell English',serif;cursor:pointer;display:flex;
+               align-items:center;justify-content:center;gap:8px">
+        🔊 <span id="cp-scourby-label">Listen — Alexander Scourby KJV</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- VERSE CLIPBOARD -->
+<div id="clip-overlay" onclick="if(event.target===this)closeClipboard()">
+  <div id="clip-inner">
+    <div id="clip-hdr">
+      <div id="clip-hdr-title">📋 Verse Card</div>
+      <button style="background:none;border:none;color:var(--text-m);font-size:20px;cursor:pointer" onclick="closeClipboard()">✕</button>
+    </div>
+    <div id="clip-body"></div>
+    <div id="clip-foot">
+      <button id="clip-clear-btn" onclick="clearClipboard()">Clear</button>
+      <button id="clip-gen-btn" onclick="generateCombinedCard()" disabled>📸 Generate Card</button>
+    </div>
   </div>
 </div>
 
@@ -1095,6 +1437,11 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
     <div id="sp-flame">🔥</div>
     <div id="sp-count"></div>
     <div id="sp-label">day streak</div>
+    <div id="sp-shields"></div>
+    <div id="sp-last" style="font-size:11px;color:var(--text-m);margin-bottom:4px"></div>
+    <div id="sp-repair" style="display:none;margin-bottom:8px">
+      <button onclick="repairStreak()" style="background:none;border:1px solid var(--border);color:var(--text-m);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer">Streak not updating? Tap to repair</button>
+    </div>
     <div id="sp-best"></div>
     <div id="sp-milestones"></div>
     <div id="sp-tip">Read a chapter, doctrine, or Romans Road each day to keep your streak</div>
@@ -1192,6 +1539,10 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Screenshot
       </button>
+      <button class="pa" id="vpop-clip-btn" onclick="addToClipboard(S.popRef,S.popTxt)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Add to Card
+      </button>
       <button class="pa" onclick="copyVerse()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Copy
@@ -1236,7 +1587,9 @@ sup.vsuper{font-size:10px;color:var(--gold-d);font-weight:700;margin-right:2px;v
 
 <script>
 /* ════ DATA ════ */
-const BASE='https://raw.githubusercontent.com/aruljohn/Bible-kjv/master/';
+// Bible JSON — self-hosted in our own repo (fallback to aruljohn if needed)
+const BASE='https://raw.githubusercontent.com/FBCKJV/KJVBible/main/bible/';
+const BASE_FALLBACK='https://raw.githubusercontent.com/aruljohn/Bible-kjv/master/';
 const BOOKS=["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
 const CH_COUNTS=[50,40,27,36,34,24,21,4,31,24,22,25,29,36,10,13,10,42,150,31,12,8,66,52,5,48,12,14,3,9,1,4,7,3,3,3,2,14,4,28,16,24,21,28,16,16,13,6,6,4,4,5,3,6,4,3,1,13,5,5,3,5,1,1,1,22];
 const bookFile=n=>n.replace(/ /g,'')+'.json';
@@ -1253,7 +1606,7 @@ const S={
   cache:{},
   popRef:'', popTxt:'',
   activeTab:'bm',
-  streak:0, streakBest:0, streakLast:'', streakMilestones:[],
+  streak:0, streakBest:0, streakLast:'', streakMilestones:[], streakTokens:0, streakLastTs:0,
   /* multi-select */
   selectMode:false,
   selected:new Set(),   // Set of refs in order tapped
@@ -1345,13 +1698,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyFont(S.fontSize);
   buildBooks();
   loadStreak();
+  scourbyInit();
   // Seed history stack
   history.replaceState({screen:'books'}, '', '');
   showScreen('books', false);
   loadVOD();
   setTimeout(()=>document.getElementById('loader').classList.add('gone'),700);
 });
-
 
 /* ════ ROMAN'S ROAD DATA ════ */
 const RR = [
@@ -1501,7 +1854,40 @@ async function selectBook(name){
     d.textContent=i+1;d.onclick=()=>selectCh(i);
     grid.appendChild(d);
   });
+  // Show Scourby listen button if audio available
+  const audioRow = document.getElementById('chs-audio-row');
+  const audioLbl = document.getElementById('chs-scourby-label');
+  if(audioRow){
+    if(SCOURBY_FILES[name]){
+      audioRow.style.display = 'block';
+      const aud = document.getElementById('scourby-audio');
+      const isLoaded = aud && aud.src && aud.src.endsWith(encodeURIComponent(SCOURBY_FILES[name]));
+      const savedPos = scourbyGetPos(name);
+      const posStr = savedPos > 10 ? ' — resume ' + scourbyFmtTime(savedPos) : '';
+      if(audioLbl) audioLbl.textContent = (isLoaded && !aud.paused)
+        ? '⏸ Pause — ' + name
+        : name + posStr + ' (Scourby KJV)';
+    } else {
+      audioRow.style.display = 'none';
+    }
+  }
   showScreen('chapters');
+}
+
+function scourbyToggleFromChapters(){
+  const name = S.book;
+  const audio = document.getElementById('scourby-audio');
+  const isLoaded = audio.src && SCOURBY_FILES[name] &&
+    audio.src.endsWith(encodeURIComponent(SCOURBY_FILES[name]));
+  if(isLoaded){ scourbyToggle(); }
+  else { scourbyLoad(name); }
+  setTimeout(()=>{
+    const lbl = document.getElementById('chs-scourby-label');
+    const aud = document.getElementById('scourby-audio');
+    if(lbl) lbl.textContent = aud.paused
+      ? name + ' (Scourby KJV)'
+      : '⏸ Pause — ' + name;
+  }, 300);
 }
 
 function selectCh(i){S.ch=i;renderReader();showScreen('reader');recordActivity();planTrackChapter(S.book,i);}
@@ -1528,13 +1914,13 @@ function renderReader(){
     const d=document.createElement('div');
     d.className=`vblock ${hl?'hl-'+hl:''} ${isBM?'bookmarked':''}`.trim();
     d.dataset.ref=ref; d.dataset.vnum=v.verse; d.dataset.txt=v.text;
+    d.dataset.verse=v.verse;
 
     let inner=`<span class="vnum">${v.verse}</span><div><span class="vtxt">${v.text}</span>`;
     if(note) inner+=`<div class="vnote-chip" onclick="openNoteChip(event,'${ref}')">📝 ${note.substring(0,50)}${note.length>50?'…':''}</div>`;
     inner+='</div>';
 
     d.innerHTML=inner;
-
 
     /* touch/click handling */
     let pressTimer=null;
@@ -1694,18 +2080,16 @@ function getMultiText(){
 
 function multiCopy(){
   const sorted = getSelectedSorted();
-  const first  = sorted[0];
-  const last   = sorted[sorted.length-1];
+  if(!sorted.length) return;
+  const first = sorted[0];
+  const last  = sorted[sorted.length-1];
 
-  // Detect if this is a full chapter selection
-  const totalVerses = S.bookData?.chapters[S.ch]?.verses?.length || 0;
-  const isFullChapter = sorted.length === totalVerses && totalVerses > 0;
-
-  if(isFullChapter){
-    showCopyFormatPicker(sorted, first, last);
-  } else {
-    // Partial — always use block text
+  if(sorted.length === 1){
+    // Single verse — just copy block text, no picker needed
     doCopy(buildBlockText(sorted, first, last));
+  } else {
+    // 2+ verses — always offer format choice
+    showCopyFormatPicker(sorted, first, last);
   }
 }
 
@@ -1716,15 +2100,23 @@ function buildBlockText(sorted, first, last){
   return `${ref}\n${sorted.map(v=>v.txt).join(' ')}`;
 }
 
-function buildNumberedText(sorted, first){
-  const header = first.ref.replace(/:.*$/,''); // e.g. "Song of Solomon 1"
-  const lines  = sorted.map(v=>`${v.vnum}  ${v.txt}`).join('\n\n');
-  return `${header}\n\n${lines}`;
+function buildNumberedText(sorted, first, last){
+  const ref = sorted.length === 1
+    ? first.ref
+    : `${first.ref.replace(/:.*$/,'')}:${first.vnum}–${last.vnum}`;
+  const lines = sorted.map(v=>`${v.vnum}  ${v.txt}`).join('\n');
+  return `${ref}\n${lines}`;
 }
 
 function showCopyFormatPicker(sorted, first, last){
   const existing = document.getElementById('copy-fmt-sheet');
   if(existing) existing.remove();
+
+  const ref = sorted.length === 1
+    ? first.ref
+    : `${first.ref.replace(/:.*$/,'')}:${first.vnum}–${last.vnum}`;
+  const previewTrad = `${ref}\n${first.vnum}  ${first.txt.substring(0,40)}...\n${sorted.length>1?last.vnum+'  '+last.txt.substring(0,30)+'...':''}`;
+  const previewBlock = `${ref}\n${sorted.map(v=>v.txt).join(' ').substring(0,70)}...`;
 
   const sheet = document.createElement('div');
   sheet.id = 'copy-fmt-sheet';
@@ -1732,22 +2124,21 @@ function showCopyFormatPicker(sorted, first, last){
   sheet.innerHTML = `
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:18px 18px 0 0;width:100%;max-width:700px;padding:20px 18px 32px;animation:su .22s ease">
       <div style="font-family:'IM Fell English',serif;font-size:17px;color:var(--gold);margin-bottom:14px;text-align:center">Copy Format</div>
-      <button onclick="document.getElementById('copy-fmt-sheet').remove();doCopy(buildNumberedText(window._cfSorted,window._cfFirst))"
+      <button onclick="document.getElementById('copy-fmt-sheet').remove();doCopy(buildNumberedText(window._cfSorted,window._cfFirst,window._cfLast))"
         style="display:block;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 16px;font-size:14px;cursor:pointer;text-align:left;margin-bottom:8px">
-        <div style="font-weight:600;color:var(--gold);margin-bottom:3px">📋 Traditional (numbered verses)</div>
-        <div style="font-size:12px;color:var(--text-m);font-family:'Crimson Pro',serif">Song of Solomon 1<br>1  The song of songs...<br>2  Let him kiss me...</div>
+        <div style="font-weight:600;color:var(--gold);margin-bottom:4px">📋 Traditional (numbered verses)</div>
+        <div style="font-size:12px;color:var(--text-m);font-family:'Crimson Pro',serif;white-space:pre-line">${previewTrad}</div>
       </button>
       <button onclick="document.getElementById('copy-fmt-sheet').remove();doCopy(buildBlockText(window._cfSorted,window._cfFirst,window._cfLast))"
         style="display:block;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 16px;font-size:14px;cursor:pointer;text-align:left;margin-bottom:12px">
-        <div style="font-weight:600;color:var(--gold);margin-bottom:3px">📄 Block text (flowing paragraph)</div>
-        <div style="font-size:12px;color:var(--text-m);font-family:'Crimson Pro',serif">Song of Solomon 1:1–22<br>The song of songs, which is...</div>
+        <div style="font-weight:600;color:var(--gold);margin-bottom:4px">📄 Block text (flowing paragraph)</div>
+        <div style="font-size:12px;color:var(--text-m);font-family:'Crimson Pro',serif;white-space:pre-line">${previewBlock}</div>
       </button>
       <button onclick="document.getElementById('copy-fmt-sheet').remove()"
         style="display:block;width:100%;background:none;border:1px solid var(--border);color:var(--text-m);border-radius:10px;padding:10px;font-size:13px;cursor:pointer">
         Cancel
       </button>
     </div>`;
-  // Store data on window for the onclick handlers
   window._cfSorted = sorted; window._cfFirst = first; window._cfLast = last;
   document.body.appendChild(sheet);
   sheet.addEventListener('click', e=>{ if(e.target===sheet) sheet.remove(); });
@@ -1835,8 +2226,8 @@ function openNote(){document.getElementById('note-area').value=S.notes[S.popRef]
 function cancelNote(){document.getElementById('note-area-wrap').classList.remove('on');}
 function saveNote(){const t=document.getElementById('note-area').value.trim();if(t)S.notes[S.popRef]=t;else delete S.notes[S.popRef];LS.set('kjv_notes',S.notes);cancelNote();refreshVBlock(S.popRef);}
 function openNoteChip(e,ref){e.stopPropagation();openVPop(ref,document.querySelector(`[data-ref="${ref}"] .vtxt`).textContent);setTimeout(openNote,50);}
-function copyVerse(){const t=`"${S.popTxt}" — ${S.popRef} (KJV)`;navigator.clipboard?.writeText(t);}
-function shareVerse(){const t=`"${S.popTxt}"\n— ${S.popRef} (KJV)`;if(navigator.share)navigator.share({title:'Bible Verse',text:t});else navigator.clipboard?.writeText(t);}
+function copyVerse(){const t=`${S.popRef}  ${S.popTxt}`;navigator.clipboard?.writeText(t);}
+function shareVerse(){const t=`${S.popRef}  ${S.popTxt}`;if(navigator.share)navigator.share({title:'Bible Verse',text:t});else navigator.clipboard?.writeText(t);}
 function singleScreenshot(){S.scrVerses=[{ref:S.popRef,vnum:S.popRef.split(':')[1],txt:S.popTxt}];closePop();openScrOverlay(S.scrVerses,S.popRef);}
 
 function refreshVBlock(ref){
@@ -1932,7 +2323,7 @@ function renderPortrait(ctx, canvas, dpr, t, bodyText){
 
   // Font size based on text length
   const charCount = bodyText.length;
-  const BFONT = charCount > 400 ? 19 : charCount > 200 ? 23 : 27;
+  const BFONT = charCount > 700 ? 16 : charCount > 400 ? 19 : charCount > 200 ? 23 : 27;
   const lineH  = BFONT * 1.85;
   ctx.font = `italic ${BFONT}px Georgia, serif`;
   const bodyLines = wrapText(ctx, bodyText, W - PAD * 2);
@@ -1985,7 +2376,8 @@ function renderPortrait(ctx, canvas, dpr, t, bodyText){
   const textAreaTop    = RULE2_Y + 24;
   const textAreaBottom = RULE3_Y - 16;
   const textAreaH      = textAreaBottom - textAreaTop;
-  const TEXT_Y         = textAreaTop + (textAreaH - bodyH) / 2 + BFONT * 0.8;
+  const rawTY  = textAreaTop + (textAreaH - bodyH) / 2 + BFONT * 0.8;
+  const TEXT_Y = Math.max(textAreaTop + BFONT, rawTY); // never overlap reference
 
   drawBody(ctx, bodyLines, PAD, TEXT_Y, lineH, BFONT, t);
 
@@ -2063,7 +2455,10 @@ function downloadScreenshot(){
   a.href=document.getElementById('scr-canvas').toDataURL('image/png');
   a.click();
 }
-function closeScrOverlay(e){if(!e||e.target===document.getElementById('scr-overlay'))document.getElementById('scr-overlay').classList.remove('on');}
+function closeScrOverlay(e){
+  const ov = document.getElementById('scr-overlay');
+  if(!e||e.target===ov){ ov.classList.remove('on'); ov.style.zIndex=''; }
+}
 
 /* ════ NAV ════ */
 function prevCh(){
@@ -2102,6 +2497,11 @@ function showScreen(name, pushHistory=true){
   document.getElementById('screen-'+name)?.classList.add('on');
   document.getElementById('bn-'+name)?.classList.add('on');
   S.screen=name; updateHeaderState();
+  // Pause Scourby when leaving reader context
+  if(name==='books'){
+    const aud=document.getElementById('scourby-audio');
+    if(aud&&!aud.paused){aud.pause();const pp=document.getElementById('sb-playpause');if(pp)pp.textContent='▶';const btn=document.getElementById('scourby-btn');if(btn)btn.classList.remove('active');}
+  }
   if(name==='saved')  renderSaved();
   if(name==='plans')  renderPlansScreen();
   if(name==='reader') setTimeout(()=>{applyRL();showParallelBar();addXRefMarkers();}, 80);
@@ -2168,22 +2568,27 @@ function updateHeaderState(){
 /* ════ FETCH ════ */
 async function fetchBook(name){
   if(S.cache[name])return S.cache[name];
-  const url = BASE+bookFile(name);
-  try{
-    // Check offline cache first
-    if('caches' in window){
-      try{
-        const cache  = await caches.open(BIBLE_CACHE);
-        const cached = await cache.match(url);
-        if(cached){const d=await cached.json();S.cache[name]=d;return d;}
-      }catch(e){}
-    }
-    const r=await fetch(url);
-    if(!r.ok)throw 0;
-    const d=await r.json();
-    S.cache[name]=d;
-    return d;
-  }catch{return null;}
+  const url  = BASE + bookFile(name);
+  const urlFb= BASE_FALLBACK + bookFile(name);
+  // Check offline cache first
+  if('caches' in window){
+    try{
+      const cache = await caches.open(BIBLE_CACHE);
+      const cached= await cache.match(url) || await cache.match(urlFb);
+      if(cached){const d=await cached.json();S.cache[name]=d;return d;}
+    }catch(e){}
+  }
+  // Try self-hosted first, fall back to aruljohn
+  for(const u of [url, urlFb]){
+    try{
+      const r=await fetch(u);
+      if(!r.ok)continue;
+      const d=await r.json();
+      S.cache[name]=d;
+      return d;
+    }catch{}
+  }
+  return null;
 }
 
 /* ════════════════════════════════
@@ -2538,8 +2943,6 @@ const DOCTRINES = [
   },
 ];
 
-
-
 function renderDoctrines(){
   const panel = document.getElementById('doctrine-panel');
   // showDoctrineVerses replaces the entire panel innerHTML, destroying doctrine-list.
@@ -2750,38 +3153,98 @@ const STOP = new Set(['the','a','an','and','or','but','in','on','of','to','for',
 
 /* Try to parse query as Bible reference */
 function parseReference(raw) {
-  const q = raw.trim();
-  // Match: optional-number + bookname + chapter + optional(:verse)
-  // e.g. "Matthew 24:24", "1 Peter 3:21", "Matt 24", "Ps 23:1"
-  const m = q.match(/^(\d\s+)?([a-zA-Z][a-zA-Z ]{1,18}?)\s+(\d{1,3})\s*(?:[:.]\s*(\d{1,3}))?$/i);
+  // Normalize: strip trailing punctuation, collapse spaces around : and -
+  const q = raw.trim().replace(/[?!.,;]+$/,'').replace(/\s*[:.:]\s*/g,':').replace(/\s*[-–]\s*/g,'-');
+  // Match: book + chapter + optional verse + optional verse-end range
+  const m = q.match(/^(\d\s+)?([a-zA-Z][a-zA-Z ]{1,18}?)\s+(\d{1,3})\s*(?:[:.]\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?)?$/i);
   if (!m) return null;
 
-  const prefix  = (m[1]||'').trim();          // "1","2","3" or ""
-  const rawName = m[2].trim();                 // "Peter", "Corinthians", etc.
+  const prefix  = (m[1]||'').trim();
+  const rawName = m[2].trim();
   const chapter = parseInt(m[3]);
   const verse   = m[4] ? parseInt(m[4]) : null;
+  const verseEnd = m[5] ? parseInt(m[5]) : null;
 
-  // Build lookup keys
   const full  = (prefix ? prefix+rawName : rawName).toLowerCase().replace(/\s+/g,'');
   const short = rawName.toLowerCase().replace(/\s+/g,'');
   const withSpace = (prefix ? prefix+' '+rawName : rawName).toLowerCase();
 
   let book = BOOK_ALIASES[full] || BOOK_ALIASES[short];
-
-  // Try prefix match against full canonical names
   if (!book) book = BOOKS.find(b => b.toLowerCase().startsWith(withSpace));
-  // Try just the raw book name prefix
   if (!book) book = BOOKS.find(b => b.toLowerCase().replace(/\s+/g,'').startsWith(full));
 
   if (!book || chapter < 1) return null;
-  return { book, chIdx: chapter - 1, verse };
+  return { book, chIdx: chapter - 1, verse, verseEnd };
 }
 
-/* Fuzzy-ish word match: "saves" matches "save","saveth","saved" */
+// KJV variant expansion — modern→KJV and KJV→modern equivalents
+const KJV_VARIANTS = {
+  // Pronouns
+  'thee':['thee','thou','you'],'thou':['thee','thou','you'],
+  'thy':['thy','your'],'thine':['thine','your','yours'],
+  'ye':['ye','you'],'you':['you','ye','thee','thou'],
+  'yourself':['yourself','thyself'],'thyself':['thyself','yourself'],
+  // KJV verb forms
+  'hath':['hath','have','has'],'have':['have','hath','has'],
+  'has':['has','hath','have'],
+  'doth':['doth','does','do'],'doest':['doest','do','does'],
+  'saith':['saith','say','said','says'],'said':['said','saith'],
+  'spake':['spake','spoke','speak'],'spoke':['spoke','spake'],
+  'wilt':['wilt','will'],'shalt':['shalt','shall'],
+  'art':['art','are'],'wast':['wast','was'],
+  'canst':['canst','can'],'wouldest':['wouldest','would'],
+  // Show/shew
+  'show':['show','shew'],'shew':['shew','show','showed','shown'],
+  'showing':['showing','shewing'],'shewing':['shewing','showing'],
+  // Know/believe/love variants
+  'knoweth':['knoweth','know','knows'],'know':['know','knoweth','knew'],
+  'believeth':['believeth','believe','believes'],'believe':['believe','believeth'],
+  'loveth':['loveth','love','loves'],'love':['love','loveth','loved'],
+  'cometh':['cometh','come','comes'],'goeth':['goeth','go','goes'],
+  'giveth':['giveth','give','gives'],'giveth':['giveth','give','gives'],
+  'seeketh':['seeketh','seek','seeks'],'keepeth':['keepeth','keep','keeps'],
+  'doeth':['doeth','do','does'],
+  // Common KJV terms
+  'brethren':['brethren','brother','brothers'],
+  'brother':['brother','brethren'],
+  'approved':['approved','approveth'],
+  'approved':['approved','approveth'],
+  'study':['study','studieth'],
+  // Modern → archaic
+  'ask':['ask','asketh'],'asked':['asked','asketh'],
+  'sent':['sent','sendeth'],'send':['send','sendeth'],
+  'speak':['speak','spake','spoken','speaketh'],
+};
+
+/* Fuzzy word match with KJV variant support */
 function wordMatches(text, word) {
-  if (text.includes(word)) return true;
-  if (word.length > 4) return text.includes(word.slice(0,-1)); // strip last char
+  const variants = KJV_VARIANTS[word] || [word];
+  for (const v of variants) {
+    if (text.includes(v)) return true;
+    if (v.length > 4 && text.includes(v.slice(0,-1))) return true;
+  }
   return false;
+}
+
+// Testament filter state
+S.searchFilter = 'all';
+function setSearchFilter(f){
+  S.searchFilter = f;
+  document.querySelectorAll('.sf-btn').forEach((b,i)=>{
+    b.classList.toggle('on', ['all','ot','nt'][i]===f);
+  });
+  // Re-run current search with new filter
+  const inp = document.getElementById('s-input') || document.querySelector('#search-panel input');
+  if(inp && inp.value.trim().length >= 2) doSearch(inp.value.trim());
+  else { renderBookStrip(); renderSearchPage(0); }
+}
+
+function isOT(bookName){ return BOOKS.indexOf(bookName) < 39; }
+function isNT(bookName){ return BOOKS.indexOf(bookName) >= 39; }
+function passesFilter(bookName){
+  if(S.searchFilter==='ot') return isOT(bookName);
+  if(S.searchFilter==='nt') return isNT(bookName);
+  return true;
 }
 
 let sTimer = null;
@@ -2793,14 +3256,18 @@ function handleSearch(q) {
     return;
   }
   document.getElementById('s-results').innerHTML = '<div id="s-status">Searching…</div>';
+  const strip = document.getElementById('s-book-strip');
+  if(strip) strip.style.display = 'none';
   sTimer = setTimeout(() => doSearch(raw), 350);
 }
 
 async function doSearch(raw) {
   const el = document.getElementById('s-results');
+  // Strip trailing punctuation for reference check
+  const cleaned = raw.trim().replace(/[?!.,;]+$/, '');
 
-  // ── 1. Reference search (e.g. "Matthew 24:24", "1 Peter 3") ──
-  const ref = parseReference(raw);
+  // ── 1. Reference search ──
+  const ref = parseReference(cleaned);
   if (ref) {
     const data = await fetchBook(ref.book);
     if (!data) { el.innerHTML = `<div id="s-status">Could not load ${ref.book}</div>`; return; }
@@ -2808,16 +3275,21 @@ async function doSearch(raw) {
     const ch    = data.chapters[chIdx];
 
     if (ref.verse) {
-      // Single verse jump
-      const v   = ch.verses[ref.verse - 1] || ch.verses.find(x => parseInt(x.verse) === ref.verse);
-      const ref2 = `${ref.book} ${chIdx+1}:${ref.verse}`;
+      const endV = ref.verseEnd || ref.verse;
+      // Show verse or verse range
+      const verses = ch.verses.filter(v => {
+        const vn = parseInt(v.verse);
+        return vn >= ref.verse && vn <= endV;
+      });
+      const refLabel = endV > ref.verse
+        ? `${ref.book} ${chIdx+1}:${ref.verse}–${endV}`
+        : `${ref.book} ${chIdx+1}:${ref.verse}`;
       el.innerHTML = `
-        <div class="rc ref-jump" onclick="jumpToRef('${ref2.replace(/'/g,"\\'")}')">
-          <div class="rc-ref">↗ Jump to ${ref2}</div>
-          ${v ? `<div class="rc-txt">${v.text}</div>` : ''}
+        <div class="rc ref-jump" onclick="jumpToRef('${(ref.book+' '+(chIdx+1)+':'+ref.verse).replace(/'/g,"\\'")}')">
+          <div class="rc-ref">↗ Jump to ${refLabel}</div>
+          ${verses.map(v=>`<div class="rc-txt"><strong style="color:var(--gold);font-size:11px">${v.verse}</strong> ${v.text}</div>`).join('')}
         </div>`;
     } else {
-      // Whole chapter
       el.innerHTML = `<div id="s-status" style="text-align:left;padding:0 0 8px">${ch.verses.length} verses — ${ref.book} ${chIdx+1}</div>`
         + ch.verses.map(v => {
             const r = `${ref.book} ${chIdx+1}:${v.verse}`;
@@ -2828,70 +3300,197 @@ async function doSearch(raw) {
   }
 
   // ── 2. Keyword search ──
-  const lower = raw.toLowerCase();
-  // Split into keywords, filter stop words, keep words ≥ 3 chars
-  const allWords  = lower.split(/\s+/).filter(w => w.length >= 2);
-  const keywords  = allWords.filter(w => !STOP.has(w) && w.length >= 3);
-  const searchOn  = keywords.length > 0 ? keywords : allWords.filter(w => w.length >= 2);
+  // Strip punctuation from query before processing
+  const lower = cleaned.toLowerCase().replace(/[?!.,;:'"]+/g,'');
+  const allWords = lower.split(/\s+/).filter(w => w.length >= 2);
+  const keywords = allWords.filter(w => !STOP.has(w) && w.length >= 3);
+  const searchOn = keywords.length > 0 ? keywords : allWords.filter(w => w.length >= 2);
 
   if (searchOn.length === 0) { el.innerHTML = '<div id="s-status">Please enter a search term</div>'; return; }
 
-  const results = [];
-  const MAX     = 100;
-  const isPhrase = raw.includes('"') || searchOn.length === 1;
+  // ── Progressive search: scan all books, count accurately, show results up to MAX ──
+  const MAX = Infinity; // store all results, paginate in display
+  S._searchResults = [];
+  S._searchQuery   = cleaned;
+  S._searchOn      = searchOn;
+  S._searchLower   = lower;
+  S._bookFilter    = null;
+  S._bookCounts    = {};
+  S._totalCount    = 0;
+
+  el.innerHTML = `<div id="s-status">Searching…</div>`;
+  const strip = document.getElementById('s-book-strip');
+  if(strip) strip.style.display = 'none';
 
   for (const bookName of BOOKS) {
-    if (results.length >= MAX) break;
+    if (!passesFilter(bookName)) continue;
     const data = await fetchBook(bookName);
     if (!data) continue;
 
+    let bookCount = 0;
     for (const ch of data.chapters) {
       for (const v of ch.verses) {
         const txt = v.text.toLowerCase();
-
-        let matched;
-        if (isPhrase && searchOn.length === 1) {
-          // Single keyword — partial match
-          matched = wordMatches(txt, searchOn[0]);
-        } else {
-          // AND: all keywords must match (with fuzzy)
-          matched = searchOn.every(w => wordMatches(txt, w));
-        }
-
-        if (matched) {
-          results.push({
-            ref: `${bookName} ${ch.chapter}:${v.verse}`,
-            txt: v.text,
-            // Score: exact phrase bonus + keyword density
-            score: (lower.length > 4 && txt.includes(lower) ? 10 : 0) + searchOn.filter(w => txt.includes(w)).length
-          });
-          if (results.length >= MAX) break;
+        if (searchOn.every(w => wordMatches(txt, w))) {
+          bookCount++;
+          // Proximity boost: keywords appearing close together score higher
+          let proxBoost = 0;
+          if (searchOn.length > 1) {
+            const pos = searchOn.map(w => {
+              const vars = KJV_VARIANTS[w] || [w];
+              for(const vv of vars){ const i = txt.indexOf(vv); if(i>=0) return i; }
+              return txt.length;
+            });
+            const span = Math.max(...pos) - Math.min(...pos);
+            proxBoost = span < 30 ? 8 : span < 60 ? 4 : span < 100 ? 2 : 0;
+          }
+          // Store all results
+          S._searchResults.push({
+              ref: `${bookName} ${ch.chapter}:${v.verse}`,
+              txt: v.text,
+              book: bookName,
+              score: searchOn.filter(w => wordMatches(txt, w)).length
+                + (txt.includes(lower.slice(0,20)) ? 5 : 0)
+                + proxBoost
+            });
         }
       }
-      if (results.length >= MAX) break;
+    }
+
+    if (bookCount > 0) {
+      S._bookCounts[bookName] = bookCount;
+      S._totalCount += bookCount;
+      // Update UI after each book with results
+      renderBookStrip();
+      if (S._searchResults.length > 0 && Object.keys(S._bookCounts).length === 1) {
+        renderSearchPage(0); // show first results immediately
+      }
     }
   }
 
-  // Sort by score descending
-  results.sort((a, b) => b.score - a.score);
-
-  if (!results.length) {
-    // Try OR fallback if AND found nothing
-    el.innerHTML = `<div id="s-status">No exact matches. Try fewer or different words.</div>`;
+  // Final render
+  if (!S._searchResults.length) {
+    el.innerHTML = `<div id="s-status">No results found. Try fewer words or check spelling.</div>`;
+    if(strip) strip.style.display = 'none';
     return;
   }
-
-  // Highlight all matched keywords
-  const reStr = searchOn.map(w => w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|');
-  const re    = new RegExp(`(${reStr})`, 'gi');
-
-  el.innerHTML = `<div id="s-status" style="text-align:left;padding:0 0 8px">${results.length}${results.length>=MAX?'+':''} result${results.length!==1?'s':''} for "<strong style="color:var(--gold)">${raw}</strong>"</div>`
-    + results.map(r => `<div class="rc" onclick="jumpToRef('${r.ref.replace(/'/g,"\\'")}')">
-        <div class="rc-ref">${r.ref}</div>
-        <div class="rc-txt">${r.txt.replace(re,'<mark>$1</mark>')}</div>
-      </div>`).join('');
+  renderSearchPage(0);
 }
 
+function renderBookStrip(){
+  const strip = document.getElementById('s-book-strip');
+  if(!strip) return;
+  const counts = S._bookCounts || {};
+  const books  = Object.keys(counts);
+  if(!books.length){ strip.style.display='none'; return; }
+
+  const total = S._totalCount || 0;
+  const scanning = Object.keys(counts).length < BOOKS.filter(b=>passesFilter(b)).length;
+
+  strip.style.display = 'flex';
+  const allLabel = scanning ? `${total}…` : total.toLocaleString();
+  strip.innerHTML =
+    `<span class="s-bchip ${!S._bookFilter?'on':''}" onclick="setBookFilter(null)">All<span class="s-bchip-n">${allLabel}</span></span>` +
+    books.map(b =>
+      `<span class="s-bchip ${S._bookFilter===b?'on':''}" onclick="setBookFilter('${b.replace(/'/g,"\\'")}')"><span>${b}</span><span class="s-bchip-n">${counts[b].toLocaleString()}</span></span>`
+    ).join('');
+}
+
+function setBookFilter(book){
+  S._bookFilter = book;
+  renderBookStrip(); // update chip highlight
+
+  if(book){
+    // Show ALL results for this specific book (fetch if needed)
+    showAllInBook(book);
+  } else {
+    renderSearchPage(0);
+  }
+}
+
+async function showAllInBook(bookName){
+  const el = document.getElementById('s-results');
+  el.innerHTML = `<div id="s-status">Loading ${bookName}…</div>`;
+
+  const searchOn = S._searchOn || [];
+  const lower    = S._searchLower || '';
+  const data = await fetchBook(bookName);
+  if(!data){ el.innerHTML = `<div id="s-status">Could not load ${bookName}</div>`; return; }
+
+  const bookResults = [];
+  for(const ch of data.chapters){
+    for(const v of ch.verses){
+      const txt = v.text.toLowerCase();
+      if(searchOn.every(w => wordMatches(txt, w))){
+        bookResults.push({
+          ref: `${bookName} ${ch.chapter}:${v.verse}`,
+          txt: v.text, book: bookName,
+          score: searchOn.filter(w=>wordMatches(txt,w)).length + (txt.includes(lower.slice(0,20))?5:0)
+        });
+      }
+    }
+  }
+
+  // Temporarily replace _searchResults with this book's results for pagination
+  const saved = S._searchResults;
+  S._searchResults = bookResults;
+  renderSearchPage(0);
+  S._searchResults = saved; // restore
+  // Keep book results available for pagination
+  S._bookPageResults = bookResults;
+}
+
+function renderSearchPage(startIdx){
+  const el      = document.getElementById('s-results');
+  const allResults = (S._bookFilter && S._bookPageResults) ? S._bookPageResults : (S._searchResults || []);
+  const filtered = S._bookFilter ? allResults.filter(r => r.book === S._bookFilter) : allResults;
+  const cleaned = S._searchQuery  || '';
+  const PAGE    = 300;
+  const page    = filtered.slice(startIdx, startIdx + PAGE);
+  const total   = filtered.length;
+  const MAX     = Infinity;
+  const curPage = Math.floor(startIdx / PAGE) + 1;
+  const totalPages = Math.ceil(total / PAGE);
+
+  const sw = cleaned.toLowerCase().replace(/[?!.,;:'"]+/g,'').split(/\s+/).filter(w=>w.length>=2&&!STOP.has(w));
+  const reStr = sw.length ? sw.map(w=>(KJV_VARIANTS[w]||[w]).concat([w]).map(v=>v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')).join('|') : null;
+  const re = reStr ? new RegExp(`(${reStr})`, 'gi') : null;
+
+  const filterLabel = (S.searchFilter==='ot')?' · Old Testament':(S.searchFilter==='nt')?' · New Testament':'';
+  const bookLabel   = S._bookFilter ? ` · ${S._bookFilter}` : '';
+  const capNote = (S._searchResults||[]).length>=500 ? ' · up to 8 per book' : '';
+  const pageNote = totalPages > 1 ? ` · page ${curPage} of ${totalPages}` : '';
+
+  if (startIdx===0) {
+    el.innerHTML = `<div id="s-status" style="text-align:left;padding:0 0 8px">${total.toLocaleString()}${capNote} result${total!==1?'s':''}${filterLabel}${bookLabel} for "<strong style="color:var(--gold)">${cleaned}</strong>"${pageNote}</div>`;
+  } else {
+    const old = el.querySelector('button');
+    if(old) old.remove();
+    const oldEnd = el.querySelector('.s-end');
+    if(oldEnd) oldEnd.remove();
+  }
+
+  page.forEach(r => {
+    const hi = re ? r.txt.replace(re,'<mark>$1</mark>') : r.txt;
+    el.insertAdjacentHTML('beforeend', `<div class="rc" onclick="jumpToRef('${r.ref.replace(/'/g,"\\'")}')"><div class="rc-ref">${r.ref}</div><div class="rc-txt">${hi}</div></div>`);
+  });
+
+  // Page navigation chips
+  if(totalPages > 1){
+    const visPages = [];
+    for(let p = 1; p <= totalPages; p++){
+      if(p === 1 || p === totalPages || Math.abs(p - curPage) <= 2) visPages.push(p);
+      else if(visPages[visPages.length-1] !== '…') visPages.push('…');
+    }
+    const pagerHTML = `<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 4px;align-items:center">
+      ${visPages.map(p => p==='…'
+        ? `<span style="color:var(--text-m);font-size:13px">…</span>`
+        : `<button onclick="renderSearchPage(${(p-1)*PAGE})" style="background:${p===curPage?'var(--gold)':'var(--surface)'};color:${p===curPage?'var(--bg)':'var(--text-d)'};border:1px solid ${p===curPage?'var(--gold)':'var(--border)'};border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;cursor:pointer;min-width:36px">P${p}</button>`
+      ).join('')}
+    </div>`;
+    el.insertAdjacentHTML('beforeend', pagerHTML);
+  }
+}
 
 /* ════ KJV DICTIONARY ════ */
 
@@ -3034,33 +3633,66 @@ const MILESTONES = [
   {days:365, ico:'🏆', label:'365 Days'},
 ];
 
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+function todayStr(){
+  const d = new Date();
+  // Use LOCAL date so timezone doesn't cause missed-day false positives
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function yesterdayStr(){
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
 function loadStreak(){
-  S.streak     = LS.get('kjv_streak', 0);
-  S.streakBest = LS.get('kjv_streak_best', 0);
-  S.streakLast = LS.get('kjv_streak_last', '');
+  S.streak         = LS.get('kjv_streak', 0);
+  S.streakBest     = LS.get('kjv_streak_best', 0);
+  S.streakLast     = LS.get('kjv_streak_last', '');
   S.streakMilestones = LS.get('kjv_streak_ms', []);
+  S.streakTokens   = parseInt(LS.get('kjv_streak_tokens', '0')) || 0;
+  S.streakLastTs   = parseInt(LS.get('kjv_streak_ts', '0')) || 0;
   updateStreakBadge();
 }
 
 function recordActivity(){
-  const today = todayStr();
+  const today     = todayStr();
+  const yesterday = yesterdayStr();
+  const now       = Date.now();
+
   if(S.streakLast === today) return; // already counted today
 
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-  if(S.streakLast === yesterday){
-    S.streak++;                      // consecutive day
+  // Grace window: 26 hours covers timezone edge cases
+  const hoursElapsed = S.streakLastTs ? (now - S.streakLastTs) / 3600000 : 999;
+  const consecutive  = S.streakLast === yesterday || hoursElapsed <= 26;
+
+  if(consecutive){
+    S.streak++;
+  } else if(S.streakTokens > 0){
+    // Auto-use a shield token to protect the streak
+    S.streakTokens--;
+    LS.set('kjv_streak_tokens', S.streakTokens);
+    const left = S.streakTokens;
+    setTimeout(() => showToast(`🛡️ Streak shield used! ${left} shield${left!==1?'s':''} remaining`), 300);
   } else {
-    S.streak = 1;                    // streak broken — start fresh
+    S.streak = 1;
   }
 
-  S.streakLast = today;
+  S.streakLast   = today;
+  S.streakLastTs = now;
   if(S.streak > S.streakBest) S.streakBest = S.streak;
 
   LS.set('kjv_streak', S.streak);
   LS.set('kjv_streak_best', S.streakBest);
   LS.set('kjv_streak_last', S.streakLast);
+  LS.set('kjv_streak_ts', now);
+
+  // Award a shield token every 7 days (cap at 3)
+  if(S.streak > 0 && S.streak % 7 === 0 && S.streakTokens < 3){
+    S.streakTokens++;
+    LS.set('kjv_streak_tokens', S.streakTokens);
+    setTimeout(() => showToast(`🛡️ Streak shield earned! ${S.streakTokens}/3`), 500);
+  }
 
   updateStreakBadge();
   checkMilestone();
@@ -3094,9 +3726,31 @@ function updateStreakBadge(){
 
 function showStreakInfo(){
   document.getElementById('sp-count').textContent = S.streak;
-  document.getElementById('sp-best').textContent = S.streakBest > S.streak
-    ? `Personal best: ${S.streakBest} days` : S.streakBest > 0
+  document.getElementById('sp-best').textContent = S.streakBest > 0
     ? `Personal best: ${S.streakBest} days` : '';
+
+  // Shield tokens
+  const shieldsEl = document.getElementById('sp-shields');
+  if(shieldsEl){
+    const tokens = S.streakTokens || 0;
+    shieldsEl.innerHTML = `
+      <div style="display:flex;justify-content:center;gap:6px;margin:6px 0 2px">
+        ${Array.from({length:3},(_,i)=>`<span style="font-size:24px;opacity:${i<tokens?1:0.2}">🛡️</span>`).join('')}
+      </div>
+      <div style="font-size:11px;color:var(--text-m);text-align:center">${tokens}/3 shields · earned every 7 days</div>`;
+  }
+
+  // Last read diagnostic
+  const lastEl = document.getElementById('sp-last');
+  if(lastEl) lastEl.textContent = S.streakLast ? `Last read: ${S.streakLast}` : '';
+
+  // Repair button for stuck streaks
+  const repairEl = document.getElementById('sp-repair');
+  if(repairEl){
+    const today = todayStr();
+    const stuck = S.streakLast && S.streakLast !== today && S.streakLast !== yesterdayStr();
+    repairEl.style.display = stuck ? 'block' : 'none';
+  }
 
   const ms = MILESTONES.map(m => `
     <div class="sp-badge ${S.streak >= m.days || S.streakMilestones.includes(m.days) ? 'earned' : ''}">
@@ -3111,7 +3765,6 @@ function closeStreakPanel(e){
   if(!e || e.target===document.getElementById('streak-panel'))
     document.getElementById('streak-panel').classList.remove('on');
 }
-
 
 /* ════════════════════════════════
    READING PLANS
@@ -3375,7 +4028,6 @@ function applyRL(){
   });
 }
 
-
 /* ════════════════════════════════
    PARALLEL PASSAGES
 ════════════════════════════════ */
@@ -3507,7 +4159,6 @@ function closeParPanel(e){
   if(!e || e.target===document.getElementById('par-panel'))
     document.getElementById('par-panel').classList.remove('on');
 }
-
 
 /* ════════════════════════════════
    VERSE CROSS-REFERENCES (OT→NT)
@@ -3817,7 +4468,6 @@ document.addEventListener('click', e => {
     closeXRef();
 });
 
-
 /* ════ SHARE ════ */
 function showSharePop(){document.getElementById('share-pop').classList.add('on');}
 function closeSharePop(e){if(!e||e.target===document.getElementById('share-pop'))document.getElementById('share-pop').classList.remove('on');}
@@ -4058,7 +4708,6 @@ function shareScreenshot(){
 const _logoImg = new Image();
 _logoImg.src = 'data:image/png;base64,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';
 
-
 /* ════ TIPS & ADD TO HOME SCREEN ════ */
 function showTips(){
   document.getElementById('tips-sheet').classList.add('on');
@@ -4198,66 +4847,299 @@ async function clearOfflineCache(){
   } catch(e){}
 }
 
-
 /* ════════════════════════════════
    VERSE MEMORY GAME
 ════════════════════════════════ */
 const MEM_VERSES = [
-  { cat:"Roman's Road", icon:'✝', verses:[
+  // ── Pack 1: Foundation (always available) ──
+  { pack:1, cat:"Roman's Road", icon:'✝', verses:[
     'Romans 3:23','Romans 6:23','Romans 5:8',
     'Romans 10:9','Romans 10:13','Romans 8:1'
   ]},
-  { cat:'Salvation', icon:'🕊', verses:[
+  { pack:1, cat:'Salvation', icon:'🕊', verses:[
     'John 3:16','Acts 16:31','Ephesians 2:8',
     'Ephesians 2:9','John 14:6','Titus 3:5'
   ]},
-  { cat:'Christian Life', icon:'📖', verses:[
+  { pack:1, cat:'Christian Life', icon:'📖', verses:[
     'Philippians 4:13','Proverbs 3:5','Proverbs 3:6',
     'Isaiah 40:31','Romans 8:28','Matthew 11:28',
     'Philippians 4:6','Philippians 4:7','1 Peter 5:7','2 Timothy 1:7'
   ]},
-  { cat:'Scripture & Prayer', icon:'🙏', verses:[
+  { pack:1, cat:'Scripture & Prayer', icon:'🙏', verses:[
     'Psalm 119:105','Psalm 119:11','2 Timothy 3:16',
     '1 Thessalonians 5:17','Matthew 7:7','Matthew 6:33'
   ]},
-  { cat:'The Great Commission', icon:'🌍', verses:[
+  { pack:1, cat:'The Great Commission', icon:'🌍', verses:[
     'Matthew 28:19','Matthew 28:20','Mark 16:15','Acts 1:8','Proverbs 11:30'
+  ]},
+
+  // ── Pack 2: Wisdom (unlocks after Pack 1 Heart Full) ──
+  { pack:2, cat:'Beatitudes', icon:'🕊️', verses:[
+    'Matthew 5:3','Matthew 5:4','Matthew 5:5',
+    'Matthew 5:6','Matthew 5:8','Matthew 5:9'
+  ]},
+  { pack:2, cat:'Psalms', icon:'📜', verses:[
+    'Psalm 1:1-2','Psalm 23:4','Psalm 27:4','Psalm 34:8',
+    'Psalm 46:10','Psalm 51:10','Psalm 91:1','Psalm 121:1-2'
+  ]},
+  { pack:2, cat:'Proverbs', icon:'⚖️', verses:[
+    'Proverbs 1:7','Proverbs 3:6','Proverbs 4:23',
+    'Proverbs 16:3','Proverbs 22:6','Proverbs 31:30'
+  ]},
+  { pack:2, cat:'Ecclesiastes', icon:'🌄', verses:[
+    'Ecclesiastes 3:1','Ecclesiastes 12:1','Ecclesiastes 12:13'
+  ]},
+  { pack:2, cat:'Song of Solomon', icon:'❤️', verses:[
+    'Song of Solomon 2:4','Song of Solomon 8:7'
   ]},
 ];
 
-const M = { ref:null,tokens:[],revealed:new Set(),mode:'guided',active:null,peeking:false };
+// ── Memory mastery (persisted) ──
+/* ── BADGE DEFINITIONS ── */
+const PACK1_REFS = MEM_VERSES.filter(c=>c.pack===1).flatMap(c=>c.verses);
+const PACK2_REFS = MEM_VERSES.filter(c=>c.pack===2).flatMap(c=>c.verses);
 
-function openMemorize(){ document.getElementById('mem-overlay').classList.add('on'); renderMemSelect(); }
-function closeMemorize(){ document.getElementById('mem-overlay').classList.remove('on'); M.active=null; M.peeking=false; }
+const MEM_BADGES = [
+  { id:'first_steps',   ico:'📖', name:'First Steps',        desc:'Complete any verse in Guided mode',          check: ms => ms.practiced >= 1 },
+  { id:'challenger',    ico:'⚔️',  name:'Challenge Accepted', desc:'Complete any verse in Challenge mode',       check: ms => ms.mastered >= 1 },
+  { id:'romans_road',   ico:'✝️',  name:"Roman's Road",       desc:'Master all 6 Roman\'s Road verses',          check: ms => ['Romans 3:23','Romans 6:23','Romans 5:8','Romans 10:9','Romans 10:13','Romans 8:1'].every(r=>ms.masteredRefs.includes(r)) },
+  { id:'gospel_ready',  ico:'🕊️',  name:'Gospel Ready',       desc:'Master all 6 Salvation verses',             check: ms => ['John 3:16','Acts 16:31','Ephesians 2:8','Ephesians 2:9','John 14:6','Titus 3:5'].every(r=>ms.masteredRefs.includes(r)) },
+  { id:'ambassador',    ico:'🌍',  name:'Ambassador',         desc:'Complete all Great Commission verses',       check: ms => ['Matthew 28:19','Matthew 28:20','Mark 16:15','Acts 1:8','Proverbs 11:30'].every(r=>ms.practicedRefs.includes(r)) },
+  { id:'ten_mastered',  ico:'💯',  name:'Scripture Hidden',   desc:'Master 10 verses',                          check: ms => ms.mastered >= 10 },
+  { id:'all_mastered',  ico:'🏆',  name:'Heart Full',         desc:'Master all Foundation verses',              check: ms => PACK1_REFS.every(r=>ms.masteredRefs.includes(r)) },
+  { id:'wisdom_crown',  ico:'👑',  name:'Wisdom Crown',       desc:'Master all Wisdom Pack verses',             check: ms => PACK2_REFS.every(r=>ms.masteredRefs.includes(r)), prestige:2 },
+];
+
+const M = { ref:null,tokens:[],revealed:new Set(),mode:'guided',active:null,peeking:false,startTime:0,verseText:'' };
+
+/* ── PERSISTENCE ── */
+function memGetMastery(){
+  return LS.get('kjv_mem_mastery', { refs:{}, streak:0, streakLast:'', badges:[] });
+}
+function memSaveMastery(ms){ LS.set('kjv_mem_mastery', ms); }
+
+function memGetStats(ms){
+  const refs = ms.refs || {};
+  const masteredRefs = Object.keys(refs).filter(r=>refs[r].mastered);
+  const practicedRefs = Object.keys(refs);
+  return {
+    mastered: masteredRefs.length,
+    practiced: practicedRefs.length,
+    masteredRefs,
+    practicedRefs,
+    total: MEM_VERSES.reduce((a,c)=>a+c.verses.length,0)
+  };
+}
+
+function memRecordComplete(ref, mode, elapsed){
+  const ms = memGetMastery();
+  if(!ms.refs) ms.refs = {};
+  const existing = ms.refs[ref] || {mastered:false,timesCompleted:0,bestMode:null,bestTimeChallenge:null,bestTimeGuided:null};
+  existing.timesCompleted++;
+  if(mode==='challenge') existing.mastered=true;
+  if(!existing.bestMode||(mode==='challenge'&&existing.bestMode!=='challenge')) existing.bestMode=mode;
+  const btKey = mode==='challenge'?'bestTimeChallenge':'bestTimeGuided';
+  if(existing[btKey]===null||existing[btKey]===undefined||elapsed<existing[btKey]) existing[btKey]=elapsed;
+  ms.refs[ref]=existing;
+
+  // Update mem streak
+  const today = new Date().toISOString().slice(0,10);
+  if(ms.streakLast !== today){
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    ms.streak = (ms.streakLast === yesterday) ? (ms.streak||0)+1 : 1;
+    ms.streakLast = today;
+  }
+
+  memSaveMastery(ms);
+  memUpdateStreakDisplay(ms);
+
+  // Check badges
+  const stats = memGetStats(ms);
+  if(!ms.badges) ms.badges = [];
+  MEM_BADGES.forEach(b=>{
+    if(!ms.badges.includes(b.id) && b.check(stats)){
+      ms.badges.push(b.id);
+      memSaveMastery(ms);
+      setTimeout(()=>memShowBadgeToast(b), 600);
+    }
+  });
+  return ms.refs[ref];
+}
+
+/* ── MEMORY STREAK DISPLAY ── */
+function memUpdateStreakDisplay(ms){
+  const n = (ms && ms.streak) || 0;
+  const el = document.getElementById('mgs-num');
+  const dl = document.getElementById('mgs-days');
+  if(el) el.textContent = n;
+  if(dl) dl.textContent = n === 1 ? 'day' : 'days';
+}
+
+/* ── BADGE TOAST ── */
+function memShowBadgeToast(badge){
+  const t = document.getElementById('mem-badge-toast');
+  if(!t) return;
+  document.getElementById('mbt-ico').textContent = badge.ico;
+  document.getElementById('mbt-name').textContent = badge.name;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+/* ── SIMPLE TOAST ── */
+function showToast(msg){
+  const t = document.getElementById('mem-toast');
+  if(!t){ console.log(msg); return; }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+/* ── OPEN / CLOSE / BACK ── */
+function openMemorize(){
+  document.getElementById('mem-overlay').classList.add('on');
+  history.pushState({screen:'mem-overlay'},'','');
+  const ms = memGetMastery();
+  memUpdateStreakDisplay(ms);
+  renderMemSelect();
+}
+function closeMemorize(){
+  document.getElementById('mem-overlay').classList.remove('on');
+  M.active=null; M.peeking=false;
+}
 function memBack(){
   document.getElementById('mem-game').style.display='none';
   document.getElementById('mem-select').style.display='block';
-  document.getElementById('mem-hdr-title').textContent='✏️ Verse Memory';
+  document.getElementById('mem-hdr-title').textContent='⚔ Sword Drill';
+  document.getElementById('mem-hdr-sub').textContent='Verse Memorization';
   document.getElementById('mem-back').style.display='none';
   M.active=null; M.peeking=false;
+  renderMemSelect(); // refresh status dots
+}
+
+/* ── POPSTATE HANDLER for mem overlay ── */
+(function(){
+  const origHandler = window.onpopstate;
+  window.addEventListener('popstate', function(e){
+    const overlay = document.getElementById('mem-overlay');
+    if(overlay && overlay.classList.contains('on')){
+      // If we're in the game view, go back to select; otherwise close overlay
+      const game = document.getElementById('mem-game');
+      if(game && game.style.display !== 'none'){
+        memBack();
+      } else {
+        closeMemorize();
+      }
+      // Re-push so the browser doesn't actually navigate away
+      history.pushState({screen:'mem-overlay'},'','');
+      return;
+    }
+  }, {capture:true});
+})();
+
+/* ── SELECT SCREEN ── */
+// Track which categories are collapsed (persisted in LS)
+function memGetCollapsed(){ return new Set(LS.get('kjv_mem_collapsed',[])); }
+function memToggleCat(catKey){
+  const el = document.getElementById('memcat-'+catKey);
+  if(!el) return;
+  const nowOpen = el.classList.toggle('open');
+  const c = memGetCollapsed();
+  nowOpen ? c.delete(catKey) : c.add(catKey);
+  LS.set('kjv_mem_collapsed',[...c]);
+  if(nowOpen) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);
 }
 
 function renderMemSelect(){
   document.getElementById('mem-select').style.display='block';
   document.getElementById('mem-game').style.display='none';
   document.getElementById('mem-back').style.display='none';
+  const ms = memGetMastery();
+  const stats = memGetStats(ms);
+  const refs = ms.refs || {};
+  const collapsed = memGetCollapsed();
+
+  // Pack unlock check
+  const pack1Complete = PACK1_REFS.every(r=>refs[r]&&refs[r].mastered);
+  const pack1Count = PACK1_REFS.filter(r=>refs[r]&&refs[r].mastered).length;
+  const pack2Count = PACK2_REFS.filter(r=>refs[r]&&refs[r].mastered).length;
+
+  function renderCat(cat){
+    const catKey = cat.cat.replace(/\s+/g,'_').replace(/'/g,'');
+    const isCollapsed = collapsed.has(catKey);
+    const catMastered = cat.verses.filter(r=>refs[r]&&refs[r].mastered).length;
+    const catTotal = cat.verses.length;
+    const verses = cat.verses.map(ref=>{
+      const r = refs[ref];
+      const isMastered = r && r.mastered;
+      const isPracticed = r && !r.mastered;
+      const dot = isMastered ? '\u2705' : isPracticed ? '\uD83D\uDD04' : '\u2B1C';
+      const cls = isMastered ? 'mastered' : isPracticed ? 'practiced' : '';
+      const preview = isMastered ? 'mastered \u2713' : isPracticed ? 'practiced '+r.timesCompleted+'\u00D7' : 'tap to begin \u2192';
+      return '<button class="mem-verse-btn '+cls+'" onclick="startMem(\''+ref.replace(/'/g,"\\'")+'\')">'
+        +'<span class="mem-verse-ref">'+ref+'</span>'
+        +'<span class="mem-verse-preview">'+preview+'</span>'
+        +'<span class="mem-status-dot">'+dot+'</span>'
+        +'</button>';
+    }).join('');
+    const sm = catMastered>0 ? '<span style="font-size:11px;color:var(--text-m)"> '+catMastered+'/'+catTotal+'</span>' : '';
+    return '<div class="mem-cat'+(!isCollapsed?' open':'')+'" id="memcat-'+catKey+'">'
+      +'<div class="mem-cat-hdr" onclick="memToggleCat(\''+catKey+'\')"><span>'+cat.icon+' '+cat.cat+sm+'</span><span class="mem-cat-chevron">&#9654;</span></div>'
+      +'<div class="mem-cat-body">'+verses+'</div>'
+      +'</div>';
+  }
+
+  const pack1Cats = MEM_VERSES.filter(c=>c.pack===1).map(renderCat).join('');
+  const pack2Cats = MEM_VERSES.filter(c=>c.pack===2).map(renderCat).join('');
+
+  const pack2Block = pack1Complete
+    ? `<div class="mem-pack-hdr">
+        <span>👑 Wisdom Pack</span>
+        <span style="font-size:11px;color:var(--text-m)">${pack2Count}/${PACK2_REFS.length} mastered</span>
+       </div>${pack2Cats}`
+    : `<div class="mem-pack-locked">
+        <div style="font-size:22px;margin-bottom:6px">🔒</div>
+        <div style="font-family:'IM Fell English',serif;font-size:16px;color:var(--gold);margin-bottom:4px">Wisdom Pack</div>
+        <div style="font-size:13px;color:var(--text-m)">Master all ${PACK1_REFS.length} Foundation verses to unlock</div>
+        <div style="font-size:12px;color:var(--text-m);margin-top:4px">${pack1Count}/${PACK1_REFS.length} mastered</div>
+       </div>`;
+
   const el=document.getElementById('mem-select');
-  el.innerHTML=`<div style="padding:14px">
-    <div style="font-size:13px;color:var(--text-m);margin-bottom:14px;font-style:italic;font-family:'Crimson Pro',serif">
-      Choose a verse. Tap any blank and type — press Enter to check.
+  el.innerHTML=`
+    <div id="mem-stats-bar">
+      <span>Choose a verse — tap any blank and type</span>
+      <span class="msb-count">${stats.mastered}/${stats.total} mastered</span>
     </div>
-    ${MEM_VERSES.map(cat=>`
-      <div class="mem-cat">
-        <div class="mem-cat-hdr">${cat.icon} ${cat.cat}</div>
-        ${cat.verses.map(ref=>`
-          <button class="mem-verse-btn" onclick="startMem('${ref.replace(/'/g,"\\'") }')">
-            <span class="mem-verse-ref">${ref}</span>
-            <span class="mem-verse-preview">tap to begin →</span>
-          </button>`).join('')}
-      </div>`).join('')}
-    </div>`;
+    <div style="padding:0 14px 8px;display:flex;align-items:center;justify-content:flex-end">
+      <div id="mem-streak-chip">✏️ <span class="msc-num">${ms.streak||0}</span> day streak</div>
+    </div>
+    <div style="padding:0 14px">
+    <div class="mem-pack-hdr">
+      <span>📖 Foundation Pack</span>
+      <span style="font-size:11px;color:var(--text-m)">${pack1Count}/${PACK1_REFS.length} mastered</span>
+    </div>
+    ${pack1Cats}
+    <div style="height:8px"></div>
+    ${pack2Block}
+    </div>
+    <div class="mem-badge-hdr" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Badges</span>
+      <button onclick="openSwordCertificate()" style="background:var(--surface);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">⚔️ Certificate</button>
+    </div>
+    <div id="mem-badges">
+      ${MEM_BADGES.map(b=>{
+        const earned = (ms.badges||[]).includes(b.id);
+        const isPrestige = b.prestige;
+        return `<div class="mbadge${isPrestige?' prestige':''}" title="${b.desc}">
+          <span class="mbadge-ico${earned?' earned':''}">${b.ico}</span>
+          <span class="mbadge-lbl${earned?' earned':''}">${b.name}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="height:20px"></div>`;
 }
 
+/* ── TOKENISE ── */
 function tokeniseVerse(text){
   return text.trim().split(/\s+/).map(w=>{
     const m=w.match(/^([^a-zA-Z]*)([a-zA-Z][a-zA-Z'-]*)([^a-zA-Z]*)$/);
@@ -4265,21 +5147,37 @@ function tokeniseVerse(text){
   });
 }
 
+/* ── START ── */
 async function startMem(refStr){
   document.getElementById('mem-hdr-title').textContent=refStr;
+  const sub=document.getElementById('mem-hdr-sub'); if(sub) sub.textContent=M.mode==='challenge'?'Challenge Mode':'Guided Mode';
   document.getElementById('mem-back').style.display='block';
   document.getElementById('mem-select').style.display='none';
   document.getElementById('mem-game').style.display='flex';
   document.getElementById('mem-congrats').style.display='none';
   document.getElementById('mem-verse-text').style.display='block';
-  const parsed=parseReference(refStr);
-  if(!parsed)return;
-  const data=await fetchBook(parsed.book);
-  if(!data)return;
-  const v=data.chapters[parsed.chIdx]?.verses[(parsed.verse||1)-1];
-  if(!v)return;
-  M.ref=refStr; M.tokens=tokeniseVerse(v.text);
-  M.revealed=new Set(); M.active=null; M.peeking=false;
+
+  // ── Parse ref — supports single verse AND ranges (e.g. "Psalm 1:1-2") ──
+  const rangeM = refStr.match(/^(.+)\s+(\d+):(\d+)(?:-(\d+))?$/);
+  if(!rangeM) return;
+  const bookName=rangeM[1].trim(), ch=parseInt(rangeM[2])-1,
+        v1=parseInt(rangeM[3])-1, v2=rangeM[4]?parseInt(rangeM[4])-1:v1;
+
+  const data=await fetchBook(bookName);
+  if(!data) return;
+  const chapter=data.chapters[ch];
+  if(!chapter) return;
+
+  // Concatenate all verses in range
+  const texts=[];
+  for(let i=v1;i<=v2;i++){
+    if(chapter.verses[i]) texts.push(chapter.verses[i].text);
+  }
+  const fullText=texts.join(' ');
+  if(!fullText) return;
+
+  M.ref=refStr; M.tokens=tokeniseVerse(fullText); M.verseText=fullText;
+  M.revealed=new Set(); M.active=null; M.peeking=false; M.startTime=Date.now();
   M.mode=document.getElementById('mmb-guided').classList.contains('on')?'guided':'challenge';
   const rb=document.getElementById('mem-reveal-btn');
   if(rb){rb.classList.remove('on');rb.textContent='👁 Show';}
@@ -4308,7 +5206,6 @@ function updateMemDisplay(){
 
 function activateMem(idx){
   if(M.revealed.has(idx))return;
-  // Cancel existing input
   const ex=document.querySelector('.mem-inline-input');
   if(ex){ const pi=parseInt(ex.dataset.idx); ex.replaceWith(createBlankSpan(pi)); }
   M.active=idx;
@@ -4328,7 +5225,7 @@ function activateMem(idx){
     setTimeout(()=>{
       const still=document.querySelector(`.mem-inline-input[data-idx="${idx}"]`);
       if(still&&M.active===idx){still.replaceWith(createBlankSpan(idx));M.active=null;}
-    },250);
+    },400); // iOS needs extra time
   });
   target.replaceWith(inp);
   setTimeout(()=>{inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'});},30);
@@ -4342,7 +5239,6 @@ function checkInlineWord(idx,typed,inputEl){
     inputEl.classList.add('correct');
     setTimeout(()=>{
       updateMemDisplay(); updateMemProgress();
-      // Auto-advance: next unrevealed after idx, then wrap
       for(let i=idx+1;i<M.tokens.length;i++){if(!M.revealed.has(i)){activateMem(i);return;}}
       for(let i=0;i<idx;i++){if(!M.revealed.has(i)){activateMem(i);return;}}
     },350);
@@ -4375,7 +5271,7 @@ function setMemMode(mode){
 }
 
 function resetMem(){
-  M.revealed.clear();M.active=null;M.peeking=false;
+  M.revealed.clear();M.active=null;M.peeking=false; M.startTime=Date.now();
   const rb=document.getElementById('mem-reveal-btn');
   if(rb){rb.classList.remove('on');rb.textContent='👁 Show';}
   document.getElementById('mem-congrats').style.display='none';
@@ -4383,9 +5279,89 @@ function resetMem(){
   updateMemDisplay();updateMemProgress();
 }
 
+function fmtTime(s){const m=Math.floor(s/60);return m>0?`${m}m ${s%60}s`:`${s}s`;}
+
 function showMemCongrats(){
+  const elapsed = Math.round((Date.now()-M.startTime)/1000);
+  const isMastered = M.mode==='challenge';
+  const btKey = M.mode==='challenge'?'bestTimeChallenge':'bestTimeGuided';
+
+  // Capture prior best BEFORE recording so we can compare
+  const msBefore = memGetMastery();
+  const priorBest = msBefore.refs?.[M.ref]?.[btKey] ?? null;
+  const priorCount = msBefore.refs?.[M.ref]?.timesCompleted ?? 0;
+
+  // Record in persistence, get back saved record with updated best times
+  const rec = memRecordComplete(M.ref, M.mode, elapsed);
+
+  // Build time display
+  let timeDisplay = `⏱ ${fmtTime(elapsed)}`;
+  if(priorCount > 0 && priorBest !== null){
+    // Not first run — show best comparison
+    if(elapsed < priorBest){
+      timeDisplay += ' 🏅 New best!';
+    } else {
+      timeDisplay += `  •  Best: ${fmtTime(priorBest)}`;
+    }
+  }
+
+  // Populate congrats panel
+  document.getElementById('mc-ico').textContent = isMastered?'🏆':'🎉';
+  document.getElementById('mc-title').textContent = isMastered?'Verse Mastered!':'Verse Complete!';
+  document.getElementById('mc-time').textContent = timeDisplay;
+  document.getElementById('mc-mode-lbl').textContent = M.mode==='guided'?'🔤 Guided':'⬜ Challenge';
+  document.getElementById('mc-verse-echo').textContent = `"${M.verseText}" — ${M.ref}`;
+  document.getElementById('mc-sub').textContent = isMastered
+    ? 'Hidden in thine heart — well done!'
+    : 'Try Challenge mode to mark it mastered';
+  const mastBadge = document.getElementById('mc-mastered-badge');
+  if(mastBadge) mastBadge.classList.toggle('show', isMastered);
+
   document.getElementById('mem-verse-text').style.display='none';
   document.getElementById('mem-congrats').style.display='flex';
+
+  // Confetti only on Challenge completion
+  if(isMastered) memLaunchConfetti();
+}
+
+/* ── CONFETTI ── */
+function memLaunchConfetti(){
+  const canvas = document.getElementById('mem-confetti');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const COLORS = ['#c9943a','#f5e6c8','#4CAF50','#ffffff','#e8c56a'];
+  const pieces = Array.from({length:60},()=>({
+    x: Math.random()*canvas.width,
+    y: -10 - Math.random()*canvas.height*0.3,
+    r: 4+Math.random()*5,
+    c: COLORS[Math.floor(Math.random()*COLORS.length)],
+    vx: (Math.random()-0.5)*3,
+    vy: 2+Math.random()*3,
+    rot: Math.random()*360,
+    vr: (Math.random()-0.5)*8,
+    shape: Math.random()>0.5?'rect':'circle'
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = Math.max(0, 1 - frame/90);
+      if(p.shape==='circle'){ ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill(); }
+      else { ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); }
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vy+=0.05;
+    });
+    frame++;
+    if(frame<100) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
 }
 
 function submitMemWord(){}  /* no-op — input bar removed */
@@ -4410,6 +5386,622 @@ function submitMemWord(){}  /* no-op — input bar removed */
   });
 })();
 
+/* ════════════════════════════════
+   VERSE CLIPBOARD
+════════════════════════════════ */
+S.clipboard = []; // session-only, max 3
+
+function updateClipBadge(){
+  const n   = S.clipboard.length;
+  const badge = document.getElementById('clip-badge');
+  const num   = document.getElementById('clip-badge-n');
+  if(badge){ badge.classList.toggle('on', n > 0); if(num) num.textContent = n; }
+  const gen = document.getElementById('clip-gen-btn');
+  if(gen) gen.disabled = n < 1;
+}
+
+function addToClipboard(ref, txt){
+  if(S.clipboard.find(v => v.ref === ref)){
+    showToast('Already in card'); return;
+  }
+  if(S.clipboard.length >= 3){
+    showToast('Max 3 verses — remove one first'); return;
+  }
+  S.clipboard.push({ref, txt});
+  updateClipBadge();
+  updateVpopClipBtn();
+  showToast(`${ref} added to card`);
+  closePop();
+}
+
+function updateVpopClipBtn(){
+  const btn = document.getElementById('vpop-clip-btn');
+  if(!btn) return;
+  const already = S.clipboard.find(v => v.ref === S.popRef);
+  btn.style.opacity = already ? '0.5' : '1';
+  btn.title = already ? 'Already in card' : 'Add to verse card';
+}
+
+function openClipboard(){
+  renderClipBody();
+  document.getElementById('clip-overlay').classList.add('on');
+  history.pushState({screen:S.screen, modal:'clip'}, '', '');
+}
+
+function closeClipboard(){
+  document.getElementById('clip-overlay').classList.remove('on');
+}
+
+function clearClipboard(){
+  S.clipboard = [];
+  updateClipBadge();
+  renderClipBody();
+}
+
+function removeClipItem(idx){
+  S.clipboard.splice(idx, 1);
+  updateClipBadge();
+  renderClipBody();
+}
+
+function moveClipItem(idx, dir){
+  const to = idx + dir;
+  if(to < 0 || to >= S.clipboard.length) return;
+  [S.clipboard[idx], S.clipboard[to]] = [S.clipboard[to], S.clipboard[idx]];
+  renderClipBody();
+}
+
+function renderClipBody(){
+  const el = document.getElementById('clip-body');
+  if(!el) return;
+  if(S.clipboard.length === 0){
+    el.innerHTML = '<div id="clip-add-hint">Tap a verse → <strong>Add to Card</strong><br>to build a combined verse card (max 3)</div>';
+    return;
+  }
+  el.innerHTML = S.clipboard.map((v, i) => `
+    <div class="clip-item">
+      <div class="clip-ord">
+        <button onclick="moveClipItem(${i},-1)" ${i===0?'disabled':''}>▲</button>
+        <button onclick="moveClipItem(${i},1)" ${i===S.clipboard.length-1?'disabled':''}>▼</button>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="clip-item-ref">${v.ref}</div>
+        <div class="clip-item-preview">${v.txt.substring(0,60)}…</div>
+      </div>
+      <button class="clip-rm" onclick="removeClipItem(${i})">×</button>
+    </div>`).join('');
+}
+
+/* ── Generate combined portrait card ── */
+function generateCombinedCard(){
+  if(S.clipboard.length === 0) return;
+  closeClipboard();
+  const canvas = document.getElementById('scr-canvas');
+  drawCombinedCard(canvas);
+  document.getElementById('scr-overlay').classList.add('on');
+}
+
+function drawCombinedCard(canvas){
+  const W   = 540, PAD = 40;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const ctx = canvas.getContext('2d');
+  const t   = CARD_THEMES[S.cardTheme||'dark'];
+  const FONT = 20, LH = FONT * 1.8;
+
+  // Pre-measure all verse blocks
+  ctx.font = `italic ${FONT}px Georgia,serif`;
+  const blocks = S.clipboard.map(v => ({
+    ref:   v.ref,
+    lines: wrapText(ctx, v.txt, W - PAD*2),
+  }));
+  const blockH   = b => b.lines.length * LH + 70; // text + ref header
+  const dividerH = 36;
+  const totalBodyH = blocks.reduce((s,b)=>s+blockH(b),0) + (blocks.length-1)*dividerH;
+  const H = PAD + 30 + 16 + 8 + totalBodyH + 50;
+
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const dispW = 200;
+  canvas.style.width  = dispW + 'px';
+  canvas.style.height = (dispW * H / W) + 'px';
+  ctx.resetTransform(); ctx.scale(dpr, dpr);
+
+  // BG
+  const grd = ctx.createLinearGradient(0,0,W,H);
+  grd.addColorStop(0,t.bg1); grd.addColorStop(1,t.bg2);
+  ctx.fillStyle=grd; rr(ctx,0,0,W,H,20); ctx.fill();
+  ctx.strokeStyle=t.border; ctx.lineWidth=1.5;
+  rr(ctx,2,2,W-4,H-4,19); ctx.stroke();
+
+  // Logo watermark
+  if(_logoImg.complete && _logoImg.naturalWidth){
+    const ls = Math.min(W,H)*0.35;
+    ctx.globalAlpha=0.05;
+    ctx.drawImage(_logoImg,W/2-ls/2,H/2-ls/2,ls,ls);
+    ctx.globalAlpha=1;
+  }
+
+  // Church name
+  let y = PAD + 16;
+  ctx.textAlign='center'; ctx.fillStyle=t.ref; ctx.globalAlpha=0.5;
+  ctx.font='400 13px Georgia,serif';
+  ctx.fillText('Faith Baptist Church', W/2, y); ctx.globalAlpha=1;
+
+  y += 14;
+  ctx.strokeStyle=t.border; ctx.lineWidth=1; ctx.globalAlpha=0.5;
+  ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+  ctx.globalAlpha=1;
+  y += 20;
+
+  // Draw each verse block
+  blocks.forEach((b, i) => {
+    // Reference
+    ctx.textAlign='center'; ctx.fillStyle=t.ref;
+    ctx.font=`700 22px Georgia,serif`;
+    ctx.fillText(b.ref, W/2, y); y += 26;
+
+    // Rule under ref
+    ctx.strokeStyle=t.border; ctx.lineWidth=1; ctx.globalAlpha=0.4;
+    ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+    ctx.globalAlpha=1; y += FONT + 4;
+
+    // Verse text
+    ctx.textAlign='left'; ctx.fillStyle=t.body||t.ref;
+    ctx.font=`italic ${FONT}px Georgia,serif`;
+    b.lines.forEach(line => {
+      ctx.fillText(line, PAD, y); y += LH;
+    });
+    y += 10;
+
+    // Divider ornament between verses
+    if(i < blocks.length - 1){
+      ctx.textAlign='center'; ctx.fillStyle=t.ref; ctx.globalAlpha=0.4;
+      ctx.font=`12px serif`;
+      ctx.fillText('· ✦ ·', W/2, y + 12);
+      ctx.globalAlpha=1; y += dividerH;
+    }
+  });
+
+  // Bottom rule + KJV
+  y += 8;
+  ctx.strokeStyle=t.border; ctx.lineWidth=1; ctx.globalAlpha=0.4;
+  ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+  ctx.globalAlpha=1; y += 18;
+  ctx.textAlign='center'; ctx.fillStyle=t.ref; ctx.globalAlpha=0.35;
+  ctx.font='400 12px Georgia,serif';
+  ctx.fillText('King James Version · Faith Baptist Church', W/2, y);
+  ctx.globalAlpha=1;
+
+  // Corners
+  drawCorners(ctx, PAD, W, H, t);
+}
+
+// Handle back button for clip overlay
+window.addEventListener('popstate', function clipPopstate(e){
+  if(document.getElementById('clip-overlay').classList.contains('on')){
+    closeClipboard();
+  }
+}, {capture:true});
+
+// Update clip button state when vpop opens
+const _origOpenVPop = openVPop;
+openVPop = function(ref, txt){
+  _origOpenVPop(ref, txt);
+  updateVpopClipBtn();
+};
+
+function repairStreak(){
+  // Reset last-read to yesterday so today's reading will count
+  S.streakLast   = yesterdayStr();
+  S.streakLastTs = Date.now() - (25 * 3600000); // 25 hours ago
+  LS.set('kjv_streak_last', S.streakLast);
+  LS.set('kjv_streak_ts', S.streakLastTs);
+  closeStreakPanel();
+  showToast('Streak repaired — open any chapter to count today');
+}
+
+/* ════ SWORD DRILL CERTIFICATE ════ */
+function openSwordCertificate(){
+  const canvas = document.getElementById('scr-canvas');
+  drawSwordCertificate(canvas);
+  const refEl = document.getElementById('scr-ref');
+  if(refEl) refEl.textContent = '⚔️ Sword Drill Certificate';
+  const ov = document.getElementById('scr-overlay');
+  ov.style.zIndex = '530'; // above mem-overlay (520)
+  ov.classList.add('on');
+  history.pushState({screen:S.screen, modal:'scr'}, '', '');
+}
+
+function drawSwordCertificate(canvas){
+  const ms           = memGetMastery();
+  const stats        = memGetStats(ms);
+  const earnedBadges = MEM_BADGES.filter(b=>(ms.badges||[]).includes(b.id));
+  const pack1Done    = PACK1_REFS.every(r=>(ms.refs||{})[r]?.mastered);
+  const pack2Done    = PACK2_REFS.every(r=>(ms.refs||{})[r]?.mastered);
+
+  const W   = 540;
+  const PAD = 44;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const t   = CARD_THEMES[S.cardTheme||'dark'];
+  const ctx = canvas.getContext('2d');
+
+  // ── Pre-calculate height ──
+  const BADGE_COLS = Math.min(4, Math.max(1, earnedBadges.length));
+  const badgeRows  = earnedBadges.length > 0 ? Math.ceil(earnedBadges.length/BADGE_COLS) : 0;
+  const packLines  = (pack1Done?1:0) + (pack2Done?1:0);
+  const H = 110                  // top padding + header
+    + 44                         // rule + stats line
+    + packLines * 24             // pack completion lines
+    + (ms.streak>0 ? 26 : 0)    // streak
+    + (earnedBadges.length>0 ? 50 + badgeRows*82 : 0)  // badge section
+    + 80;                        // rule + quote + bottom padding
+
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = '200px';
+  canvas.style.height = (200 * H / W) + 'px';
+  ctx.resetTransform();
+  ctx.scale(dpr, dpr);
+
+  // ── Background ──
+  const grd = ctx.createLinearGradient(0,0,W,H);
+  grd.addColorStop(0, t.bg1); grd.addColorStop(1, t.bg2);
+  ctx.fillStyle = grd;
+  rr(ctx,0,0,W,H,18); ctx.fill();
+  ctx.strokeStyle = t.border; ctx.lineWidth = 1.5;
+  rr(ctx,2,2,W-4,H-4,17); ctx.stroke();
+
+  // ── Logo watermark ──
+  if(_logoImg.complete && _logoImg.naturalWidth){
+    const ls = Math.min(W, H) * 0.62;
+    ctx.globalAlpha = 0.07;
+    ctx.drawImage(_logoImg, W/2-ls/2, H/2-ls/2, ls, ls);
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Corners ──
+  drawCorners(ctx, PAD, W, H, t);
+
+  let y = 52;
+  ctx.textAlign = 'center';
+
+  // ── ⚔️ SWORD DRILL header ──
+  ctx.font = '400 13px Georgia,serif';
+  ctx.fillStyle = t.ref; ctx.globalAlpha = 0.45;
+  ctx.fillText('⚔  SWORD DRILL', W/2, y);
+  ctx.globalAlpha = 1;
+  y += 28;
+
+  ctx.font = 'italic 400 28px "IM Fell English",Georgia,serif';
+  ctx.fillStyle = t.ref;
+  ctx.fillText('Certificate of Achievement', W/2, y);
+  y += 22;
+
+  // Top rule
+  ctx.strokeStyle = t.border; ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.45;
+  ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+  ctx.globalAlpha = 1;
+  y += 28;
+
+  // ── Mastery stats ──
+  ctx.font = '400 20px "IM Fell English",Georgia,serif';
+  ctx.fillStyle = t.ref;
+  ctx.fillText(`${stats.mastered} of ${stats.total} verses mastered`, W/2, y);
+  y += 26;
+
+  // ── Pack completions ──
+  if(pack1Done || pack2Done){
+    ctx.font = 'italic 14px Georgia,serif';
+    ctx.fillStyle = t.ref; ctx.globalAlpha = 0.65;
+    if(pack1Done){ ctx.fillText('Foundation Pack Complete', W/2, y); y += 22; }
+    if(pack2Done){ ctx.fillText('Wisdom Pack Complete', W/2, y); y += 22; }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Streak ──
+  if(ms.streak > 0){
+    ctx.font = 'italic 14px Georgia,serif';
+    ctx.fillStyle = t.ref; ctx.globalAlpha = 0.65;
+    ctx.fillText(`${ms.streak} day memory streak`, W/2, y);
+    ctx.globalAlpha = 1;
+    y += 24;
+  }
+
+  // ── Earned Badges ──
+  if(earnedBadges.length > 0){
+    y += 10;
+    ctx.strokeStyle = t.border; ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath(); ctx.moveTo(PAD+20,y); ctx.lineTo(W-PAD-20,y); ctx.stroke();
+    ctx.globalAlpha = 1;
+    y += 18;
+
+    ctx.font = '700 10px "Inter",sans-serif';
+    ctx.fillStyle = t.ref; ctx.globalAlpha = 0.45;
+    ctx.letterSpacing = '0.15em';
+    ctx.fillText('EARNED BADGES', W/2, y);
+    ctx.letterSpacing = '0em';
+    ctx.globalAlpha = 1;
+    y += 18;
+
+    const bW = W / BADGE_COLS;
+    earnedBadges.forEach((b,i)=>{
+      const col = i % BADGE_COLS;
+      const row = Math.floor(i / BADGE_COLS);
+      const bx  = bW * col + bW/2;
+      const by  = y + row * 82;
+      // Icon
+      ctx.font = '30px serif';
+      ctx.fillStyle = t.ref; ctx.globalAlpha = 1;
+      ctx.fillText(b.ico, bx, by + 34);
+      // Name
+      ctx.font = '400 11px Georgia,serif';
+      ctx.fillStyle = t.ref; ctx.globalAlpha = 0.75;
+      ctx.fillText(b.name, bx, by + 52);
+      ctx.globalAlpha = 1;
+    });
+    y += badgeRows * 82 + 8;
+  }
+
+  // ── Bottom rule + Hebrews 4:12 ──
+  y += 8;
+  ctx.strokeStyle = t.border; ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.4;
+  ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+  ctx.globalAlpha = 1;
+  y += 22;
+
+  ctx.font = 'italic 13px "Crimson Pro",Georgia,serif';
+  ctx.fillStyle = t.ref; ctx.globalAlpha = 0.5;
+  ctx.fillText('"...sharper than any twoedged sword"  —  Hebrews 4:12 (KJV)', W/2, y);
+  ctx.globalAlpha = 1;
+}
+/* ════ SCOURBY AUDIO PLAYER ════ */
+const SCOURBY_R2 = "https://pub-844c4034761740a7a4c016d8592a6a4a.r2.dev";
+const SCOURBY_TS = {"Genesis":{"t":12175,"c":[0.0,253.6,454.7,675.8,876.9,1037.3,1221.5,1407.3,1593.7,1803.1,1960.9,2153.7,2324.3,2469.7,2662.5,2812.4,2943.4,3159.5,3435.3,3787.9,3946.3,4192.9,4393.1,4564.6,5142.4,5367.0,5649.8,6051.7,6249.3,6513.4,6838.6,7289.4,7542.0,7703.7,7955.0,8166.3,8435.2,8734.9,8995.5,9207.4,9391.9,9838.6,10149.5,10447.9,10726.0,10958.6,11202.3,11509.4,11712.7,11956.4]},"Exodus":{"t":10414,"c":[0.0,145.6,355.0,607.0,890.9,1080.1,1320.1,1540.6,1838.8,2151.7,2438.1,2541.7,3017.4,3232.5,3529.1,3756.3,4094.7,4242.8,4485.0,4708.7,4887.4,5172.0,5423.7,5687.2,5843.9,6139.0,6437.5,6615.3,7008.8,7436.1,7745.2,7884.7,8232.7,8458.9,8778.5,9039.8,9324.0,9559.1,9824.2,10152.4]},"Leviticus":{"t":7458,"c":[0.0,159.6,307.3,462.6,814.2,1034.0,1305.1,1626.0,1926.3,2115.9,2306.8,2645.7,2725.3,3289.7,3810.3,4089.6,4441.3,4609.3,4812.1,5085.0,5339.1,5517.5,5784.6,6156.0,6323.5,6788.8,7167.8]},"Numbers":{"t":9841,"c":[0.0,398.8,646.5,1032.8,1456.4,1725.0,1947.0,2527.1,2732.7,2948.7,3215.2,3531.2,3646.1,3867.7,4220.8,4540.3,4941.5,5041.7,5374.1,5578.4,5815.1,6093.6,6452.9,6675.2,6872.4,7005.5,7438.1,7620.6,7853.7,8139.1,8289.6,8651.0,8952.8,9230.5,9419.0,9707.7]},"Deuteronomy":{"t":8701,"c":[0.0,387.3,700.7,950.8,1412.1,1694.8,1892.1,2150.8,2324.6,2620.1,2805.5,3097.0,3420.8,3613.3,3830.3,4047.2,4265.2,4482.1,4669.7,4856.3,5054.5,5278.9,5553.3,5763.5,5972.5,6145.0,6349.7,6533.5,7170.4,7431.6,7635.7,7955.2,8356.0,8603.0]},"Joshua":{"t":5697,"c":[0.0,173.1,405.2,576.3,789.6,955.8,1229.0,1509.1,1878.0,2119.8,2540.7,2757.4,2904.2,3153.5,3300.1,3611.9,3688.4,3887.8,4120.5,4405.8,4498.8,4808.9,5208.0,5381.5]},"Judges":{"t":5528,"c":[0.0,280.4,482.1,727.5,949.3,1169.4,1546.9,1824.3,2112.0,2597.9,2735.8,3095.8,3212.1,3435.0,3640.8,3829.7,4153.2,4265.4,4567.1,4888.3,5312.4]},"Ruth":{"t":781,"c":[0.0,196.9,428.4,592.6]},"1 Samuel":{"t":7726,"c":[0.0,241.2,581.8,751.1,977.2,1112.6,1344.6,1501.9,1668.8,1974.2,2240.4,2395.5,2633.4,2848.4,3343.7,3646.3,3856.1,4386.4,4647.0,4861.7,5259.3,5413.2,5648.0,5904.3,6108.2,6556.1,6818.0,6936.7,7194.3,7324.2,7619.0]},"2 Samuel":{"t":6322,"c":[0.0,218.5,498.1,848.9,982.1,1173.6,1392.5,1655.8,1793.0,1918.2,2104.8,2354.7,2659.1,3011.5,3354.3,3697.4,3923.9,4210.9,4547.3,4999.3,5259.6,5498.4,5790.3,6059.7]},"1 Kings":{"t":14728,"c":[0.0,900.6,1807.9,2318.6,2742.8,3059.4,3671.1,4561.5,5846.7,6343.0,6847.1,7599.9,8223.6,8907.3,9500.4,10071.8,10693.6,11102.2,11941.5,12381.4,13270.6,13816.1]},"2 Kings":{"t":7138,"c":[0.0,203.0,460.4,717.8,1133.3,1429.2,1738.5,1988.6,2278.1,2643.8,3009.0,3232.9,3441.8,3677.0,3944.4,4275.8,4474.9,4852.7,5223.0,5571.4,5771.8,5998.5,6214.6,6662.9,6840.1]},"1 Chronicles":{"t":6606,"c":[0.0,221.5,496.0,608.5,884.9,1100.3,1535.3,1804.8,1964.1,2275.5,2393.6,2699.8,3019.9,3145.1,3260.9,3492.5,3768.3,4021.0,4150.4,4354.7,4448.5,4745.0,4941.2,5162.1,5337.6,5513.7,5744.0,6005.2,6285.4]},"2 Chronicles":{"t":7889,"c":[0.0,160.4,355.6,501.1,681.2,831.6,1255.9,1482.2,1644.4,1911.3,2080.8,2227.9,2373.4,2567.7,2703.3,2860.0,3005.0,3143.9,3461.6,3568.1,3915.6,4104.1,4238.4,4476.9,4759.2,5052.8,5271.0,5344.8,5616.0,5966.1,6229.1,6458.1,6786.2,7022.2,7392.3,7664.7]},"Ezra":{"t":2274,"c":[0.0,113.4,418.3,585.5,820.5,998.6,1236.3,1500.1,1802.6,1991.1]},"Nehemiah":{"t":3337,"c":[0.0,124.2,352.8,638.1,866.0,1068.5,1260.2,1634.7,1853.1,2275.9,2483.5,2734.4,3030.5]},"Esther":{"t":1688,"c":[0.0,214.5,456.0,621.4,776.2,924.2,1066.9,1170.2,1365.0,1659.8]},"Job":{"t":6040,"c":[0.0,213.9,343.1,487.9,600.0,749.2,910.1,1041.5,1155.0,1336.6,1470.7,1583.2,1716.3,1854.2,1991.0,2174.2,2299.3,2386.8,2500.9,2659.4,2833.3,3007.5,3168.4,3261.8,3422.3,3452.3,3521.1,3645.6,3797.4,3932.2,4103.8,4334.4,4459.5,4634.4,4839.6,4924.4,5089.6,5223.7,5443.7,5602.9,5723.3,5892.5]},"Psalms":{"t":15040,"c":[0.0,45.8,118.4,167.4,225.5,311.8,367.9,483.1,541.6,670.9,794.2,839.3,891.1,928.8,981.3,1016.2,1088.8,1198.3,1521.8,1617.6,1668.4,1755.0,1959.8,2001.3,2064.1,2184.6,2249.0,2368.8,2439.7,2502.7,2584.1,2759.6,2844.5,2967.8,3090.1,3288.8,3367.4,3614.7,3741.9,3837.1,3978.0,4062.6,4161.6,4207.4,4366.3,4481.5,4553.4,4603.8,4684.5,4803.2,4944.2,5057.6,5115.7,5169.3,5208.1,5361.3,5440.6,5521.7,5598.5,5717.9,5792.3,5839.1,5919.5,5987.8,6052.6,6146.7,6261.9,6301.1,6547.0,6783.1,6819.0,6985.0,7115.0,7264.0,7409.5,7476.1,7544.1,7660.4,8092.0,8189.6,8307.3,8408.8,8449.7,8545.9,8625.5,8698.4,8808.7,8848.5,8952.8,9262.5,9375.3,9476.8,9567.7,9600.1,9725.5,9795.6,9875.3,9941.9,10001.8,10057.1,10087.4,10148.3,10308.7,10429.2,10639.9,10862.6,11131.0,11372.4,11445.0,11633.1,11683.2,11745.5,11806.1,11856.2,11893.5,11990.1,12091.2,12102.8,12266.7,13120.4,13151.4,13190.2,13233.9,13267.0,13309.6,13347.7,13380.8,13419.5,13455.1,13497.1,13537.9,13559.1,13656.3,13680.6,13696.1,13812.1,13936.4,13994.6,14055.2,14199.6,14283.9,14355.4,14408.6,14497.4,14603.8,14720.4,14783.1,14888.5,14959.7,15010.1]},"Proverbs":{"t":5622,"c":[0.0,194.0,309.6,511.8,668.1,800.4,1004.6,1158.2,1368.3,1476.0,1673.0,1868.9,2046.9,2196.4,2410.2,2613.6,2816.6,2994.6,3137.0,3326.2,3512.4,3699.7,3884.7,4096.3,4313.2,4508.3,4679.9,4851.9,5049.3,5208.2,5447.5]},"Ecclesiastes":{"t":1987,"c":[0.0,135.3,396.7,580.9,716.2,906.0,1013.2,1233.3,1416.7,1614.4,1757.6,1854.8]},"Song of Solomon":{"t":918,"c":[0.0,112.6,233.9,333.0,458.4,595.6,693.0,793.9]},"Isaiah":{"t":12795,"c":[0.0,261.8,458.1,660.8,733.4,1031.5,1157.9,1397.3,1590.1,1797.0,2117.6,2296.8,2343.1,2542.1,2837.8,2929.7,3073.0,3220.9,3309.0,3561.2,3619.5,3763.6,3997.1,4159.1,4363.6,4495.2,4685.2,4825.1,5106.3,5362.6,5728.5,5839.7,5990.3,6192.4,6372.7,6468.4,6706.7,7097.4,7301.9,7394.5,7669.5,7947.2,8180.7,8426.3,8732.4,8999.8,9117.9,9280.6,9497.2,9796.7,9922.8,10189.1,10329.0,10462.7,10633.0,10770.9,10895.6,11092.1,11272.4,11476.6,11706.3,11837.6,11962.6,12148.5,12254.9,12515.0]},"Jeremiah":{"t":13654,"c":[0.0,169.0,495.2,751.9,1027.5,1307.3,1572.0,1882.5,2108.5,2355.7,2571.4,2811.2,2985.3,3221.9,3442.1,3666.8,3890.6,4155.9,4366.9,4540.1,4730.2,4889.6,5157.6,5537.2,5652.8,6017.0,6273.1,6517.1,6689.9,7011.6,7241.1,7655.4,8113.7,8383.3,8647.0,8857.4,9212.7,9408.3,9723.2,9897.7,10115.7,10328.2,10576.0,10723.3,11116.4,11165.0,11427.8,11496.6,11871.8,12249.5,12716.9,13310.0]},"Lamentations":{"t":1222,"c":[0.0,271.4,587.7,901.4,1115.5]},"Ezekiel":{"t":12138,"c":[0.0,268.0,352.1,601.3,761.2,954.7,1099.4,1336.0,1537.8,1661.0,1864.0,2086.1,2332.3,2559.6,2789.4,2852.6,3413.2,3651.4,3934.5,4044.1,4537.3,4828.5,5087.2,5494.5,5732.9,5889.4,6113.3,6392.8,6642.0,6861.9,7096.0,7305.5,7637.3,7967.2,8262.3,8386.2,8749.7,9017.7,9256.7,9542.6,10013.9,10261.0,10436.0,10715.4,11033.0,11304.7,11575.8,11816.1]},"Daniel":{"t":3723,"c":[0.0,189.0,670.3,988.6,1402.5,1721.8,2012.2,2309.3,2582.7,2892.6,3100.2,3590.9]},"Hosea":{"t":1714,"c":[0.0,117.6,342.2,393.9,547.9,669.8,754.0,885.8,995.1,1150.1,1290.9,1393.0,1496.0,1637.1]},"Joel":{"t":712,"c":[0.0,177.8,513.1]},"Amos":{"t":1360,"c":[0.0,146.7,289.0,417.0,556.3,768.5,897.2,1049.1,1182.6]},"Obadiah":{"t":185,"c":[0.0]},"Jonah":{"t":419,"c":[0.0,163.3,231.3,313.9]},"Micah":{"t":1037,"c":[0.0,148.7,280.2,396.6,553.2,700.2,844.9]},"Nahum":{"t":456,"c":[0.0,139.9,271.6]},"Habakkuk":{"t":526,"c":[0.0,150.8,351.6]},"Zephaniah":{"t":563,"c":[0.0,193.6,354.8]},"Haggai":{"t":352,"c":[0.0,140.6]},"Zechariah":{"t":2009,"c":[0.0,194.0,292.9,385.2,499.0,604.4,736.7,854.5,1073.8,1241.3,1368.5,1525.1,1669.2,1774.3]},"Malachi":{"t":604,"c":[0.0,165.2,350.4,542.1]},"Matthew":{"t":8373,"c":[0.0,167.2,386.1,522.9,719.8,1102.0,1382.7,1604.0,1877.3,2173.2,2498.1,2734.2,3147.2,3630.5,3885.4,4162.9,4406.1,4625.3,4932.5,5186.7,5462.1,5860.2,6152.9,6447.4,6817.6,7169.3,7743.8,8224.3]},"Mark":{"t":5104,"c":[0.0,313.0,556.7,779.8,1090.4,1410.8,1856.1,2127.4,2410.7,2802.5,3212.4,3474.2,3830.3,4109.0,4645.8,4953.1]},"Luke":{"t":8958,"c":[0.0,546.7,924.5,1275.7,1628.3,1956.1,2380.5,2798.0,3292.2,3795.4,4138.0,4597.7,5083.6,5382.0,5662.4,5912.8,6172.5,6451.9,6751.6,7113.2,7442.7,7725.9,8208.0,8593.7]},"John":{"t":6796,"c":[0.0,357.3,538.8,810.4,1199.8,1556.0,2092.0,2448.7,2913.8,3225.6,3517.4,3929.2,4306.5,4600.5,4860.7,5078.8,5359.6,5586.0,5923.0,6282.5,6549.1]},"Acts":{"t":8293,"c":[0.0,226.1,575.3,792.2,1088.1,1439.0,1560.4,2049.6,2351.6,2709.4,3088.4,3316.6,3543.0,3978.1,4192.6,4509.0,4831.5,5124.0,5351.1,5684.6,5986.3,6351.3,6615.7,6930.7,7149.6,7392.8,7660.0,8013.3]},"Romans":{"t":3632,"c":[0.0,275.2,508.0,724.7,935.1,1120.2,1306.7,1539.9,1888.0,2165.2,2342.9,2658.2,2811.2,2950.4,3152.7,3438.8]},"1 Corinthians":{"t":3699,"c":[0.0,253.7,399.5,578.9,777.9,903.4,1085.1,1460.0,1580.8,1843.1,2103.8,2384.4,2616.2,2721.8,3068.5,3524.3]},"2 Corinthians":{"t":2320,"c":[0.0,226.0,379.4,528.2,683.4,869.7,1006.2,1179.1,1396.3,1532.1,1699.2,1973.8,2199.0]},"Galatians":{"t":1156,"c":[0.0,169.9,384.7,627.7,856.4,1024.0]},"Ephesians":{"t":1132,"c":[0.0,190.3,359.9,513.5,744.6,955.9]},"Philippians":{"t":845,"c":[0.0,244.6,477.1,664.1]},"Colossians":{"t":748,"c":[0.0,247.8,437.8,610.4]},"1 Thessalonians":{"t":1041,"c":[0.0,143.4,414.8,582.0,806.5]},"2 Thessalonians":{"t":373,"c":[0.0,106.1,245.1]},"1 Timothy":{"t":916,"c":[0.0,176.3,277.1,409.4,535.9,727.8]},"2 Timothy":{"t":669,"c":[0.0,175.9,379.2,498.5]},"Titus":{"t":368,"c":[0.0,138.5,247.4]},"Philemon":{"t":139,"c":[0.0]},"Hebrews":{"t":2474,"c":[0.0,121.3,290.6,420.5,565.4,680.6,833.1,1050.8,1189.7,1432.9,1714.2,2045.0,2294.7]},"James":{"t":883,"c":[0.0,208.5,410.9,555.7,697.2]},"1 Peter":{"t":1000,"c":[0.0,241.1,462.9,685.5,878.9]},"2 Peter":{"t":615,"c":[0.0,193.2,423.2]},"1 John":{"t":942,"c":[0.0,92.5,367.6,567.5,747.2]},"2 John":{"t":94,"c":[0.0]},"3 John":{"t":96,"c":[0.0]},"Jude":{"t":213,"c":[0.0]},"Revelation":{"t":4216,"c":[0.0,208.1,489.9,721.2,843.5,996.3,1186.1,1358.7,1498.2,1706.2,1830.3,2034.1,2208.8,2397.9,2626.7,2715.2,2914.5,3097.9,3360.5,3583.3,3750.9,4014.1]}};
+const SCOURBY_FILES = {"Genesis":"01 Genesis.mp3","Exodus":"02 Exodus.mp3","Leviticus":"03 Leviticus.mp3","Numbers":"04 Numbers.mp3","Deuteronomy":"05 Deuteronomy.mp3","Joshua":"06 Joshua.mp3","Judges":"07 Judges.mp3","Ruth":"08 Ruth.mp3","1 Samuel":"09 I Samuel.mp3","2 Samuel":"10 II Samuel.mp3","1 Kings":"11 I Kings.mp3","2 Kings":"12 II Kings.mp3","1 Chronicles":"13 I Chronicles.mp3","2 Chronicles":"14 II Chronicles.mp3","Ezra":"15 Ezra.mp3","Nehemiah":"16 Nehemiah.mp3","Esther":"17 Esther.mp3","Job":"18 Job.mp3","Psalms":"19 Psalm.mp3","Proverbs":"20 Proverbs.mp3","Ecclesiastes":"21 Ecclesiastes.mp3","Song of Solomon":"22 Solomon.mp3","Isaiah":"23 Isaiah.mp3","Jeremiah":"24 Jeremiah.mp3","Lamentations":"25 Lamentations.mp3","Ezekiel":"26 Ezekiel.mp3","Daniel":"27 Daniel.mp3","Hosea":"28 Hosea.mp3","Joel":"29 Joel.mp3","Amos":"30 Amos.mp3","Obadiah":"31 Obadiah.mp3","Jonah":"32 Jonah.mp3","Micah":"33 Micah.mp3","Nahum":"34 Nahum.mp3","Habakkuk":"35 Habakkuk.mp3","Zephaniah":"36 Zephaniah.mp3","Haggai":"37 Haggai.mp3","Zechariah":"38 Zechariah.mp3","Malachi":"39 Malachi.mp3","Matthew":"40 Matthew.mp3","Mark":"41 Mark.mp3","Luke":"42 Luke.mp3","John":"43 John.mp3","Acts":"44 Acts.mp3","Romans":"45 Romans.mp3","1 Corinthians":"46 I Corinthians.mp3","2 Corinthians":"47 II Corinthians.mp3","Galatians":"48 Galatians.mp3","Ephesians":"49 Ephesians.mp3","Philippians":"50 Philippians.mp3","Colossians":"51 Colossians.mp3","1 Thessalonians":"52 I Thessalonians.mp3","2 Thessalonians":"53 II Thessalonians.mp3","1 Timothy":"54 I Timothy.mp3","2 Timothy":"55 II Timothy.mp3","Titus":"56 Titus.mp3","Philemon":"57 Philemon.mp3","Hebrews":"58 Hebrews.mp3","James":"59 James.mp3","1 Peter":"60 I Peter.mp3","2 Peter":"61 II Peter.mp3","1 John":"62 I John.mp3","2 John":"63 II John.mp3","3 John":"64 III John.mp3","Jude":"65 Jude.mp3","Revelation":"66 Revelation.mp3"};
+
+const SA = {book:null, chIdx:0, rate:1.0, seeking:false};
+
+function scourbyInit(){
+  const audio = document.getElementById('scourby-audio');
+  if(!audio) return;
+  audio.addEventListener('timeupdate', scourbyTimeUpdate);
+  audio.addEventListener('ended', scourbyOnEnded);
+  audio.addEventListener('error', ()=>{
+    document.getElementById('sb-label').textContent = 'Audio error — check connection';
+  });
+}
+
+function scourbyBookUrl(bookName){
+  const fname = SCOURBY_FILES[bookName];
+  if(!fname) return null;
+  return SCOURBY_R2 + '/' + encodeURIComponent(fname);
+}
+
+// ── Position memory ──
+function scourbyGetPos(bookName){ return parseFloat(localStorage.getItem('kjv_spos_'+bookName)||'0'); }
+function scouryySavePos(bookName, t){ try{localStorage.setItem('kjv_spos_'+bookName, t.toFixed(1));}catch(e){} }
+function scourbyFmtTime(t){ const h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=Math.floor(t%60); return h>0?h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):m+':'+String(s).padStart(2,'0'); }
+
+function scourbyLoad(bookName){
+  const url = scourbyBookUrl(bookName);
+  if(!url) return;
+  const audio = document.getElementById('scourby-audio');
+  const ts = SCOURBY_TS[bookName];
+  if(!ts) return;
+
+  const savedPos = scourbyGetPos(bookName);
+  SA.book = bookName; SA.seeking = false;
+
+  document.getElementById('sb-label').textContent = 'Loading ' + bookName + '...';
+  document.getElementById('scourby-bar').classList.add('on'); document.body.classList.add('scourby-open');
+  const _sb=document.getElementById('scourby-btn');if(_sb)_sb.classList.add('active');
+  document.getElementById('sb-playpause').textContent = '⏸';
+
+  // Same book already loaded — just play/resume from saved pos
+  if(audio.src && audio.src.endsWith(encodeURIComponent(SCOURBY_FILES[bookName]))){
+    if(savedPos > 0 && Math.abs(audio.currentTime - savedPos) > 5) audio.currentTime = savedPos;
+    audio.playbackRate = SA.rate;
+    audio.play();
+    scourbyUpdateLabel();
+    return;
+  }
+
+  audio.src = url;
+  audio.addEventListener('loadedmetadata', function onMeta(){
+    audio.removeEventListener('loadedmetadata', onMeta);
+    if(savedPos > 5) audio.currentTime = savedPos;
+    audio.playbackRate = SA.rate;
+    audio.play();
+    scourbyUpdateLabel();
+  });
+  audio.load();
+}
+
+function scourbyToggle(){
+  const audio = document.getElementById('scourby-audio');
+  if(!audio.src || audio.src === window.location.href){
+    scourbyLoad(S.book); return;
+  }
+  if(audio.paused){
+    audio.play();
+    document.getElementById('sb-playpause').textContent = '⏸';
+    const _sb=document.getElementById('scourby-btn');if(_sb)_sb.classList.add('active');
+  } else {
+    audio.pause();
+    document.getElementById('sb-playpause').textContent = '▶';
+    const _sb=document.getElementById('scourby-btn');if(_sb)_sb.classList.remove('active');
+  }
+}
+
+function scourbyStop(){
+  const audio = document.getElementById('scourby-audio');
+  audio.pause(); audio.src = '';
+  SA.book = null;
+  document.getElementById('scourby-bar').classList.remove('on'); document.body.classList.remove('scourby-open');
+  const _sb=document.getElementById('scourby-btn');if(_sb)_sb.classList.remove('active');
+  document.getElementById('sb-progress-fill').style.width = '0%';
+}
+
+function scourbyUpdateLabel(){
+  const ts = SCOURBY_TS[SA.book];
+  if(!ts) return;
+  const audio = document.getElementById('scourby-audio');
+  const cur = scourbyFmtTime(audio.currentTime);
+  const tot = scourbyFmtTime(ts.t);
+  document.getElementById('sb-label').textContent = SA.book + '  —  ' + cur + ' / ' + tot;
+}
+
+function scourbyTimeUpdate(){
+  const audio = document.getElementById('scourby-audio');
+  if(!SA.book || SA.seeking) return;
+  const ts = SCOURBY_TS[SA.book];
+  if(!ts) return;
+  const t = audio.currentTime;
+  // Update progress bar
+  if(ts.t > 0) document.getElementById('sb-progress-fill').style.width = Math.min(100,(t/ts.t)*100)+'%';
+  // Update label every 5 seconds
+  if(Math.floor(t)%5===0) scourbyUpdateLabel();
+  // Save position every 10 seconds
+  if(Math.floor(t)%10===0) scouryySavePos(SA.book, t);
+}
+
+function scourbyOnEnded(){
+  document.getElementById('sb-playpause').textContent = '▶';
+  const _sb=document.getElementById('scourby-btn');if(_sb)_sb.classList.remove('active');
+  scouryySavePos(SA.book, 0); // reset position on completion
+  document.getElementById('sb-label').textContent = SA.book + ' — Finished ✓';
+}
+
+function scourbyNext(){
+  const audio = document.getElementById('scourby-audio');
+  if(!audio) return;
+  audio.currentTime = Math.min(audio.duration||Infinity, audio.currentTime + 30);
+}
+function scourbyPrev(){
+  const audio = document.getElementById('scourby-audio');
+  if(!audio) return;
+  audio.currentTime = Math.max(0, audio.currentTime - 30);
+}
+
+function scourbyFaster(){
+  SA.rate = Math.min(2.0, Math.round((SA.rate + 0.25)*100)/100);
+  document.getElementById('scourby-audio').playbackRate = SA.rate;
+  document.getElementById('sb-speed').textContent = SA.rate + '×';
+}
+
+function scourbySlower(){
+  SA.rate = Math.max(0.5, Math.round((SA.rate - 0.25)*100)/100);
+  document.getElementById('scourby-audio').playbackRate = SA.rate;
+  document.getElementById('sb-speed').textContent = SA.rate + '×';
+}
+
+function scourbySeekClick(e){
+  const bar = document.getElementById('sb-progress');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const ts = SCOURBY_TS[SA.book];
+  if(!ts) return;
+  const audio = document.getElementById('scourby-audio');
+  SA.seeking = true;
+  audio.currentTime = ts.t * pct;
+  SA.seeking = false;
+}
+
+
+
+function scourbyToggleFromPicker(){
+  const bookName = document.getElementById('ch-picker-book').textContent.trim() || S.book;
+  const audio = document.getElementById('scourby-audio');
+  const isLoaded = audio.src && SCOURBY_FILES[bookName] &&
+    audio.src.endsWith(encodeURIComponent(SCOURBY_FILES[bookName]));
+  if(isLoaded){
+    scourbyToggle();
+  } else {
+    scourbyLoad(bookName);
+  }
+  // Update label
+  setTimeout(()=>{
+    const lbl = document.getElementById('cp-scourby-label');
+    const aud = document.getElementById('scourby-audio');
+    if(lbl) lbl.textContent = aud.paused
+      ? '▶ Resume — ' + bookName + ' (Scourby KJV)'
+      : '⏸ Pause — ' + bookName;
+  }, 300);
+}
+/* ════ DATA BACKUP / RESTORE ════ */
+function exportAppData(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    data[k]=localStorage.getItem(k);
+  }
+  const b64=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  if(navigator.share){
+    navigator.share({title:'FBC KJV Bible — My Data Backup',text:b64});
+  } else {
+    navigator.clipboard?.writeText(b64).then(()=>{
+      showToast('✅ Data copied to clipboard — paste on your new device to restore');
+    });
+  }
+}
+
+function importAppData(){
+  const code=prompt('Paste your backup code here:');
+  if(!code||!code.trim())return;
+  try{
+    const data=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    const keys=Object.keys(data);
+    keys.forEach(k=>localStorage.setItem(k,data[k]));
+    showToast(`✅ Restored ${keys.length} items — reloading...`);
+    setTimeout(()=>location.reload(),2000);
+  }catch(e){
+    alert('Could not read that backup code. Make sure you copied the full code.');
+  }
+}
+
+function openChPicker(){
+  if(!S.bookData) return;
+  document.getElementById('ch-picker-book').textContent = S.book;
+  const n = S.bookData.chapters.length;
+  document.getElementById('ch-grid').innerHTML =
+    Array.from({length:n},(_,i)=>
+      `<div class="ch-num-btn ${i===S.ch?'cur':''}" onclick="jumpToCh(${i})">${i+1}</div>`
+    ).join('');
+  document.getElementById('ch-picker').classList.add('on');
+  history.pushState({modal:'ch-picker'},'','');
+  // Show Scourby listen row below grid
+  const row = document.getElementById('cp-audio-row');
+  const lbl = document.getElementById('cp-scourby-label');
+  console.log('openChPicker: book='+S.book+' row='+row+' hasFile='+!!SCOURBY_FILES[S.book]);
+  if(row){
+    row.style.display = 'block';
+    const aud = document.getElementById('scourby-audio');
+    const isLoaded = aud && aud.src && SCOURBY_FILES[S.book] && aud.src.endsWith(encodeURIComponent(SCOURBY_FILES[S.book]));
+    if(lbl) lbl.textContent = (isLoaded && !aud.paused)
+      ? 'Pause — ' + S.book
+      : (isLoaded ? '▶ Resume — ' : '') + S.book + ' — Listen (Scourby KJV)';
+  }
+}
+
+function closeChPicker(){
+  document.getElementById('ch-picker').classList.remove('on');
+}
+
+function jumpToCh(idx){
+  closeChPicker();
+  selectCh(idx);
+}
+
+// Handle back button for chapter picker
+window.addEventListener('popstate', function(e){
+  if(document.getElementById('ch-picker').classList.contains('on')){
+    closeChPicker();
+  }
+}, {capture:true});
+
 /* ════ SETTINGS ════ */
 function toggleFP(id){const el=document.getElementById(id);el.classList.toggle('on');}
 document.addEventListener('click',e=>{if(!e.target.closest('[id^="fp-"]')&&!e.target.closest('.hbtn'))document.querySelectorAll('[id^="fp-"]').forEach(p=>p.classList.remove('on'));});
@@ -4417,5 +6009,25 @@ function applyFont(sz){S.fontSize=sz;document.documentElement.style.setProperty(
 function changeFont(d){applyFont(Math.min(24,Math.max(13,S.fontSize+d)));LS.set('kjv_fs',S.fontSize);}
 function toggleTheme(){S.theme=S.theme==='dark'?'light':'dark';LS.set('kjv_theme',S.theme);document.body.classList.toggle('light',S.theme==='light');document.getElementById('theme-color-meta').content=S.theme==='light'?'#f7f2e8':'#0e0800';}
 </script>
+
+<!-- SCOURBY FLOATING PLAYER -->
+<div id="scourby-bar">
+  <div style="flex:1;min-width:0">
+    <div id="sb-progress" onclick="scourbySeekClick(event)">
+      <div id="sb-progress-fill" style="width:0%"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+      <span class="sb-label" id="sb-label">Alexander Scourby KJV</span>
+      <button class="sb-btn" onclick="scourbyPrev()">◀30</button>
+      <button class="sb-btn" id="sb-playpause" onclick="scourbyToggle()">⏸</button>
+      <button class="sb-btn" onclick="scourbyNext()">30▶</button>
+      <button class="sb-btn" onclick="scourbySlower()">－</button>
+      <span id="sb-speed" style="font-size:11px;color:var(--text-m);min-width:24px;text-align:center">1×</span>
+      <button class="sb-btn" onclick="scourbyFaster()">＋</button>
+      <button class="sb-btn" onclick="scourbyStop()">■</button>
+    </div>
+  </div>
+</div>
+<audio id="scourby-audio" preload="none" crossorigin="anonymous"></audio>
 </body>
 </html>
