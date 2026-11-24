@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holy Bible — KJV</title>
+<script>
+// GitHub Pages paths are case-sensitive: send /kjvbible/... (any case) to /KJVBible/...
+(function(){
+  var p = location.pathname, m = p.match(/^\/kjvbible(\/.*)?$/i);
+  if (m && p.indexOf('/KJVBible') !== 0) location.replace('/KJVBible' + (m[1] || '/') + location.search + location.hash);
+})();
+</script>
+<style>body{background:#0e0800;color:#f5ede0;font-family:Georgia,serif;text-align:center;padding:3em 16px}a{color:#e8b860}</style>
+</head>
+<body><p>This page could not be found.</p><p><a href="/KJVBible/">Open the King James Bible</a></p></body>
+</html>
